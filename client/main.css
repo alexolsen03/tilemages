@@ -1,0 +1,30 @@
+/* CSS declarations go here */
+.row{
+
+}
+
+.tile{
+	display: inline-block;
+	height: 50px;
+	width: 50px;
+}
+
+.land0{
+	background-color: #4dff88;
+}
+
+.land1{
+	background-color: #00cc44;
+}
+
+.land2{
+	background-color: #006622;
+}
+
+.water0{
+	background-color: blue;
+}
+
+.hole{
+	background-color: black;
+}

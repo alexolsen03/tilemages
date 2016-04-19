@@ -1,0 +1,14 @@
+<template name='board'>
+	<h1>BOARD</h1>
+	{{#each board}}
+		{{> tile}}
+	{{/each}}
+</template>
+
+<template name="tile">
+	<div class='row'>
+		{{ #each this }}
+			<div class='tile {{this.styleclass}}'>{{ this.name}}</div>
+		{{/each}}
+	</div>
+</template>
