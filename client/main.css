@@ -1,12 +1,14 @@
 /* CSS declarations go here */
-.row{
-
-}
 
 .tile{
+	position: relative;
 	display: inline-block;
 	height: 50px;
 	width: 50px;
+}
+
+.tile.moveable{
+	background-color: yellow;
 }
 
 .land0{
@@ -27,4 +29,14 @@
 
 .hole{
 	background-color: black;
+}
+
+.soldier{
+	position: absolute;
+	top: 12px;
+	left: 12px;
+	border-radius: 50%;
+	width: 25px;
+	height: 25px;
+	background-color: red;
 }

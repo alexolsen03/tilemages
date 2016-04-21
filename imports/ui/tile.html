@@ -1,3 +1,9 @@
 <template name="tile">
-	<div {{ attributes }}></div>
+	<div {{ attributes }}>
+		{{#if isOccupied}}
+			{{> soldier board=board
+				      x=x
+				      y=y}}
+		{{/if}}
+	</div>
 </template>

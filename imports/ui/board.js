@@ -6,12 +6,22 @@ function buildTile(x, y, type, depth){
 		y: y,
 		type: type,
 		depth: depth,
+		isOccupied: false,
+		isMoveable: false,
+		tester: type+depth,
 		styleclass: function(){
-			return type + depth;
+			if(this.isMoveable)
+				return type + depth + ' tile moveable';
+			else
+				return type + depth + ' tile';
 		},
 		aquaify: function(){
 			this.depth = 0;
 			this.type = 'water';
+		},
+		occupy: function(soldier){
+			this.isOccupied = true;
+			this.soldier = soldier;
 		}
 	}
 }
@@ -139,6 +149,7 @@ Template.board.onCreated(function(){
 				buildTile(9,9,'water',0),
 			]
 	]);
+	console.log(this.board);
 });
 
 Template.board.helpers({
@@ -158,5 +169,13 @@ Template.board.events({
 
 		// reset board
 		template.board.set(template.board.get());
-	}
+	},
+	'click .inserter': function(event, template){
+		let rx = Math.floor(Math.random() * 10);
+		let ry = Math.floor(Math.random() * 10);
+
+		template.board.get()[rx][ry].occupy({ name: 'soldier'});
+
+		template.board.set(template.board.get());
+	},
 });
