@@ -8,6 +8,76 @@ function getTileObj(me){
 	return getBoard(me)[me.x][me.y];
 }
 
+function getTileObjSpecific(me, x, y){
+	return getBoard(me)[x][y];
+}
+
+function editMoveableSquares(me, soldier, moveable){
+	let MAX_BOTTOM = 10;
+	let MAX_TOP = -1;
+	let MAX_RIGHT = 10;
+	let MAX_LEFT = -1;
+
+	let x = soldier.x;
+	let y = soldier.y;
+
+	// go down
+	let ctr = 0;
+	while(ctr < soldier.movement && x+ctr < MAX_BOTTOM){
+		getTileObjSpecific(me,x + ctr,y).isMoveable = moveable;
+		ctr++;
+	}
+
+	// go down right
+	ctr = 0;
+	while(ctr < soldier.movement && x+ctr < MAX_BOTTOM && y+ctr <MAX_RIGHT){
+		getTileObjSpecific(me,x+ctr,y+ctr).isMoveable = moveable;
+		ctr++;
+	}
+
+	// go right
+	ctr = 0;
+	while(ctr < soldier.movement && y+ctr < MAX_RIGHT){
+		getTileObjSpecific(me,x,y+ctr).isMoveable = moveable;
+		ctr++;
+	}
+
+	// go down left
+	ctr = 0;
+	while(ctr < soldier.movement && x+ctr < MAX_BOTTOM && y-ctr > MAX_LEFT){
+		getTileObjSpecific(me,x+ctr,y-ctr).isMoveable = moveable;
+		ctr++;
+	}
+
+	// go left
+	ctr = 0;
+	while(ctr < soldier.movement && y-ctr > MAX_LEFT){
+		getTileObjSpecific(me,x,y-ctr).isMoveable = moveable;
+		ctr++;
+	}
+
+	// go up left
+	ctr = 0;
+	while(ctr < soldier.movement && x-ctr > MAX_TOP && y-ctr > MAX_LEFT){
+		getTileObjSpecific(me,x-ctr,y-ctr).isMoveable = moveable;
+		ctr++;
+	}
+
+	// go up
+	ctr = 0;
+	while(ctr < soldier.movement && x-ctr > MAX_TOP){
+		getTileObjSpecific(me,x-ctr,y).isMoveable = moveable;
+		ctr++;
+	}
+
+	//go up right
+	ctr = 0;
+	while(ctr < soldier.movement && x-ctr > MAX_TOP && y+ctr < MAX_RIGHT){
+		getTileObjSpecific(me,x-ctr,y+ctr).isMoveable = moveable;
+		ctr++;
+	}
+}
+
 Template.tile.helpers({
 	attributes: function(){
 		return {
@@ -20,3 +90,35 @@ Template.tile.helpers({
 		return getTileObj(this).isOccupied;
 	}
 });
+
+Template.tile.events({
+	'click .tile.moveable': function(event, template){
+		const target = event.target;
+
+		if(Session.get('selectedSoldier')){ 	// a soldier is ready to move
+			let soldier = Session.get('selectedSoldier');
+
+			let prevX = soldier.x;
+			let prevY = soldier.y;
+			let prevMovement = soldier.movement;
+
+			editMoveableSquares(this, soldier, false);
+			getTileObjSpecific(this,prevX, prevY).isOccupied = false;
+
+			console.log('there is a selected soldier...');
+			console.log(this.x);
+			console.log(this.y);
+
+			getTileObj(this).isOccupied = true;
+
+			//TODO check to ensure it is in moveable spaces
+			let newSoldier = {
+				x: this.x,
+				y: this.y,
+				moveable: 2
+			}
+
+			Session.set('selectedSoldier', null);
+		}
+	},
+})

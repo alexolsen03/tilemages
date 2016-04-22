@@ -149,7 +149,7 @@ Template.board.onCreated(function(){
 				buildTile(9,9,'water',0),
 			]
 	]);
-	console.log(this.board);
+	Session.set('moveableState', false);
 });
 
 Template.board.helpers({
@@ -160,13 +160,6 @@ Template.board.helpers({
 
 Template.board.events({
 	'click .tile': function(event, template){
-		const target = event.target;
-
-		let xpos = target.getAttribute("xpos");
-		let ypos = target.getAttribute("ypos");
-
-//		template.board.get()[xpos][ypos].aquaify();
-
 		// reset board
 		template.board.set(template.board.get());
 	},
