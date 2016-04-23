@@ -1,12 +1,47 @@
 /* CSS declarations go here */
-.row{
 
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+div{
+	line-height: 0;
+	margin: 0px;
+	outline: none;
+	padding: 0px;
+	font-size: 0;
 }
 
 .tile{
+	position: relative;
 	display: inline-block;
+	box-sizing: border-box;;
 	height: 50px;
 	width: 50px;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+
+}
+
+.tile.moveable{
+	background-color: yellow;
 }
 
 .land0{
@@ -26,5 +61,23 @@
 }
 
 .hole{
+	background-color: black;
+}
+
+.soldier{
+	position: absolute;
+	top: 12px;
+	left: 12px;
+	border-radius: 50%;
+	width: 25px;
+	height: 25px;
+	background-color: #ddd;
+}
+
+.teamA{
+	background-color: red;
+}
+
+.teamB{
 	background-color: black;
 }

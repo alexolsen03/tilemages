@@ -6,14 +6,57 @@ function buildTile(x, y, type, depth){
 		y: y,
 		type: type,
 		depth: depth,
+		isOccupied: false,
+		isMoveable: false,
+		tester: type+depth,
 		styleclass: function(){
-			return type + depth;
+			if(this.isMoveable)
+				return type + depth + ' tile moveable';
+			else
+				return type + depth + ' tile';
 		},
 		aquaify: function(){
 			this.depth = 0;
 			this.type = 'water';
+		},
+		occupy: function(soldier){
+			this.isOccupied = true;
+			this.soldier = soldier;
+		},
+		flee: function(){
+			this.isOccupied = false;
+			this.soldier = null;
 		}
 	}
+}
+
+function buildSoldier(id, team, x, y, movement){
+	return {
+		movement: movement,
+		x: x,
+		y: y,
+		id: id,
+		team: team, // 0 = red, 1 = black
+		performedActionCount: 0,
+		maxActions: 2,
+		move: function(x, y){
+			this.x = x;
+			this.y = y;
+			this.performedActionCount++;
+		},
+		resetActions: function(){
+			this.performedActionCount = 0;
+		}
+	};
+}
+
+function findSoldierById(arr, id){
+	for(obj in arr){
+		if(obj.id === id)
+			return obj;
+	}
+
+	return null;
 }
 
 Template.board.onCreated(function(){
@@ -139,24 +182,58 @@ Template.board.onCreated(function(){
 				buildTile(9,9,'water',0),
 			]
 	]);
+
+	this.selectedSoldier = new ReactiveVar({name: 'frederick'});
+
+	this.soldiersRed = new ReactiveVar([
+			buildSoldier(1,0,0,3,2),
+			buildSoldier(2,0,0,4,2),
+			buildSoldier(3,0,0,5,2),
+			buildSoldier(4,0,0,6,2),
+			buildSoldier(5,0,0,7,2)
+		]);
+
+	this.soldiersBlue = new ReactiveVar([
+			buildSoldier(6,1,9,3,2),
+			buildSoldier(7,1,9,4,2),
+			buildSoldier(8,1,9,5,2),
+			buildSoldier(9,1,9,6,2),
+			buildSoldier(10,1,9,7,2)
+		]);
+
+	Session.set('moveableState', false);
+
+	for(let i=0;i<5;i++){
+		let soldier = this.soldiersRed.get()[i];
+		this.board.get()[soldier.x][soldier.y].occupy(soldier);
+	}
+
+	for(let i=0;i<5;i++){
+		let soldier = this.soldiersBlue.get()[i];
+		this.board.get()[soldier.x][soldier.y].occupy(soldier);
+	}
 });
 
 Template.board.helpers({
 	board: function(){
 		return Template.instance().board.get();
+	},
+	selectedSoldier: function(){
+		return Template.instance().selectedSoldier.get();
 	}
 });
 
 Template.board.events({
 	'click .tile': function(event, template){
-		const target = event.target;
-
-		let xpos = target.getAttribute("xpos");
-		let ypos = target.getAttribute("ypos");
-
-//		template.board.get()[xpos][ypos].aquaify();
-
 		// reset board
 		template.board.set(template.board.get());
-	}
+	},
+	'click .inserter': function(event, template){
+		let rx = Math.floor(Math.random() * 10);
+		let ry = Math.floor(Math.random() * 10);
+
+		template.board.get()[rx][ry].occupy({ name: 'soldier'});
+
+		template.board.set(template.board.get());
+	},
 });

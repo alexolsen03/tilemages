@@ -1,13 +1,19 @@
 <template name='board'>
 	<h1>BOARD</h1>
+	<button class='inserter'>
+		Insert Soldier
+	</button>
 	{{#each row in board}}
 		<div class='row'>
 			{{#each r in row}}
-				{{> tile x=r.x y=r.y type=r.type depth=r.depth}}
-
+				{{> tile board=board
+					x=r.x
+					y=r.y
+					soldier=r.soldier
+					selected=selectedSoldier
+				}}
 			{{/each}}
 		</div>
-
 	{{/each}}
 
 </template>
