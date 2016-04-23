@@ -81,28 +81,39 @@ function editMoveableSquares(me, soldier, moveable){
 }
 
 Template.soldier.onCreated(function(){
-	this.soldier = new ReactiveVar({
-		movement: 2,
-	});
+
 });
+
+Template.soldier.helpers({
+	teamClass: function(){
+		if(this.soldier == null)
+			return '';
+		else
+			return this.soldier.team == 0 ? 'teamA' : 'teamB';
+	}
+})
 
 Template.soldier.events({
 	'click .soldier': function(event, template){
-		let prevSelectedSoldier = Session.get('selectedSoldier');
+		console.log('clicked a soldier');
 
-		if(prevSelectedSoldier)		// a soldier is active, need to inactivate it
-			editMoveableSquares(this, prevSelectedSoldier, false);
+		let selectedSoldier = this.soldier;	// instance soldier
+		console.log(this.soldier);
 
+		if(selectedSoldier.performedActionCount < selectedSoldier.maxActions){
 
+			if(this.selected)		// a soldier is active, need to inactivate it
+				editMoveableSquares(this, this.selected, false);
 
-		let selectedSoldier = {		// soldier to be selected
-			x: this.x,
-			y: this.y,
-			movement: 2
+			// show moveable
+			editMoveableSquares(this, selectedSoldier, true);
+
+			// set selected state
+			setSelectedOverall(template, selectedSoldier);
 		}
-
-		editMoveableSquares(this, selectedSoldier, true);
-
-		Session.set('selectedSoldier', selectedSoldier);
 	}
 });
+
+function setSelectedOverall(template, soldier){
+	template.view.parentView.parentView.parentView.parentView.parentView.parentView.parentView.parentView.parentView._templateInstance.selectedSoldier.set(soldier);
+}

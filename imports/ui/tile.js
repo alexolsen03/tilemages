@@ -1,5 +1,55 @@
 import './tile.html';
 
+Template.tile.onCreated(function(){
+
+});
+
+Template.tile.helpers({
+	attributes: function(){
+		return {
+			class: getTileObj(this).styleclass(),
+			xpos: this.x,
+			ypos: this.y,
+		}
+	},
+	isOccupied: function(){
+		return getTileObj(this).isOccupied;
+	}
+});
+
+Template.tile.events({
+
+	'click .tile.moveable': function(event, template){
+		const target = event.target;
+
+		if(this.selected){
+			if(getTileObj(this).isOccupied != true){				// nobody on the new space already
+				let soldier = this.selected;
+				console.log(soldier);
+
+				let prevX = soldier.x;
+				let prevY = soldier.y;
+				let prevMovement = soldier.movement;
+
+				// remove the highlighted squares
+				editMoveableSquares(this, soldier, false);
+
+				// remove occupied info from the tile
+				getTileObjSpecific(this,prevX, prevY).flee();
+
+				console.log('moving to ' + this.x + ' ' + this.y);
+
+				// update coordinates
+				this.selected.move(this.x, this.y);
+
+				getTileObj(this).occupy(this.selected);
+
+				setSelectedOverall(template, null);
+			}
+		}
+	},
+});
+
 function getBoard(me){
 	return me.board;
 }
@@ -78,47 +128,6 @@ function editMoveableSquares(me, soldier, moveable){
 	}
 }
 
-Template.tile.helpers({
-	attributes: function(){
-		return {
-			class: getTileObj(this).styleclass(),
-			xpos: this.x,
-			ypos: this.y,
-		}
-	},
-	isOccupied: function(){
-		return getTileObj(this).isOccupied;
-	}
-});
-
-Template.tile.events({
-	'click .tile.moveable': function(event, template){
-		const target = event.target;
-
-		if(Session.get('selectedSoldier')){ 	// a soldier is ready to move
-			let soldier = Session.get('selectedSoldier');
-
-			let prevX = soldier.x;
-			let prevY = soldier.y;
-			let prevMovement = soldier.movement;
-
-			editMoveableSquares(this, soldier, false);
-			getTileObjSpecific(this,prevX, prevY).isOccupied = false;
-
-			console.log('there is a selected soldier...');
-			console.log(this.x);
-			console.log(this.y);
-
-			getTileObj(this).isOccupied = true;
-
-			//TODO check to ensure it is in moveable spaces
-			let newSoldier = {
-				x: this.x,
-				y: this.y,
-				moveable: 2
-			}
-
-			Session.set('selectedSoldier', null);
-		}
-	},
-})
+function setSelectedOverall(template, soldier){
+	template.view.parentView.parentView.parentView.parentView.parentView.parentView._templateInstance.selectedSoldier.set(soldier);
+}
