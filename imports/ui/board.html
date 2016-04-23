@@ -1,14 +1,19 @@
 <template name='board'>
 	<h1>BOARD</h1>
-	{{#each board}}
-		{{> tile}}
+	<button class='inserter'>
+		Insert Soldier
+	</button>
+	{{#each row in board}}
+		<div class='row'>
+			{{#each r in row}}
+				{{> tile board=board
+					x=r.x
+					y=r.y
+					soldier=r.soldier
+					selected=selectedSoldier
+				}}
+			{{/each}}
+		</div>
 	{{/each}}
-</template>
 
-<template name="tile">
-	<div class='row'>
-		{{ #each this }}
-			<div class='tile {{this.styleclass}}'>{{ this.name}}</div>
-		{{/each}}
-	</div>
 </template>
