@@ -1,64 +1,5 @@
 import './board.html';
 
-function buildTile(x, y, type, depth){
-	return {
-		x: x,
-		y: y,
-		type: type,
-		depth: depth,
-		isOccupied: false,
-		isMoveable: false,
-		tester: type+depth,
-		styleclass: function(){
-			if(this.isMoveable)
-				return type + depth + ' tile moveable';
-			else
-				return type + depth + ' tile';
-		},
-		aquaify: function(){
-			this.depth = 0;
-			this.type = 'water';
-		},
-		occupy: function(soldier){
-			this.isOccupied = true;
-			this.soldier = soldier;
-		},
-		flee: function(){
-			this.isOccupied = false;
-			this.soldier = null;
-		}
-	}
-}
-
-function buildSoldier(id, team, x, y, movement){
-	return {
-		movement: movement,
-		x: x,
-		y: y,
-		id: id,
-		team: team, // 0 = red, 1 = black
-		performedActionCount: 0,
-		maxActions: 2,
-		move: function(x, y){
-			this.x = x;
-			this.y = y;
-			this.performedActionCount++;
-		},
-		resetActions: function(){
-			this.performedActionCount = 0;
-		}
-	};
-}
-
-function findSoldierById(arr, id){
-	for(obj in arr){
-		if(obj.id === id)
-			return obj;
-	}
-
-	return null;
-}
-
 Template.board.onCreated(function(){
 	this.board = new ReactiveVar([
 			[    // ROW 1
@@ -183,26 +124,25 @@ Template.board.onCreated(function(){
 			]
 	]);
 
-	this.selectedSoldier = new ReactiveVar({name: 'frederick'});
+	this.selectedSoldier = new ReactiveVar(null);
 
 	this.soldiersRed = new ReactiveVar([
-			buildSoldier(1,0,0,3,2),
-			buildSoldier(2,0,0,4,2),
-			buildSoldier(3,0,0,5,2),
-			buildSoldier(4,0,0,6,2),
-			buildSoldier(5,0,0,7,2)
+			buildSoldier(1,true,0,3,2),
+			buildSoldier(2,true,0,4,2),
+			buildSoldier(3,true,0,5,2),
+			buildSoldier(4,true,0,6,2),
+			buildSoldier(5,true,0,7,2)
 		]);
 
 	this.soldiersBlue = new ReactiveVar([
-			buildSoldier(6,1,9,3,2),
-			buildSoldier(7,1,9,4,2),
-			buildSoldier(8,1,9,5,2),
-			buildSoldier(9,1,9,6,2),
-			buildSoldier(10,1,9,7,2)
+			buildSoldier(6,false,9,3,2),
+			buildSoldier(7,false,9,4,2),
+			buildSoldier(8,false,9,5,2),
+			buildSoldier(9,false,9,6,2),
+			buildSoldier(10,false,9,7,2)
 		]);
 
-	Session.set('moveableState', false);
-
+	// add the soldiers to the field
 	for(let i=0;i<5;i++){
 		let soldier = this.soldiersRed.get()[i];
 		this.board.get()[soldier.x][soldier.y].occupy(soldier);
@@ -212,6 +152,10 @@ Template.board.onCreated(function(){
 		let soldier = this.soldiersBlue.get()[i];
 		this.board.get()[soldier.x][soldier.y].occupy(soldier);
 	}
+
+	this.actionsTaken = new ReactiveVar(0);
+
+	this.isAActive = new ReactiveVar(true); // 0 is teamA, 1 is teamB
 });
 
 Template.board.helpers({
@@ -220,14 +164,27 @@ Template.board.helpers({
 	},
 	selectedSoldier: function(){
 		return Template.instance().selectedSoldier.get();
+	},
+	isAActive: function(){
+		return Template.instance().isAActive.get();
 	}
 });
 
 Template.board.events({
 	'click .tile': function(event, template){
-		// reset board
+
+		// this will be tracking actions taken and will flip the turn if all actions taken
+		if(Template.instance().actionsTaken.get() > 3){
+			Template.instance().isAActive.set(!Template.instance().isAActive.get());
+			Template.instance().actionsTaken.set(0);
+
+			resetTeams(template);
+		}
+
+		// resets board after other templates events have finished
 		template.board.set(template.board.get());
 	},
+
 	'click .inserter': function(event, template){
 		let rx = Math.floor(Math.random() * 10);
 		let ry = Math.floor(Math.random() * 10);
@@ -237,3 +194,73 @@ Template.board.events({
 		template.board.set(template.board.get());
 	},
 });
+
+function buildTile(x, y, type, depth){
+	return {
+		x: x,
+		y: y,
+		type: type,
+		depth: depth,
+		isOccupied: false,
+		isMoveable: false,
+		tester: type+depth,
+		styleclass: function(){
+			if(this.isMoveable)
+				return type + depth + ' tile moveable';
+			else
+				return type + depth + ' tile';
+		},
+		aquaify: function(){
+			this.depth = 0;
+			this.type = 'water';
+		},
+		occupy: function(soldier){
+			this.isOccupied = true;
+			this.soldier = soldier;
+		},
+		flee: function(){
+			this.isOccupied = false;
+			this.soldier = null;
+		}
+	}
+}
+
+function buildSoldier(id, team, x, y, movement){
+	return {
+		movement: movement,
+		x: x,
+		y: y,
+		id: id,
+		teamA: team, // 0 = red, 1 = black
+		performedActionCount: 0,
+		maxActions: 2,
+		move: function(x, y){
+			this.x = x;
+			this.y = y;
+			this.performedActionCount++;
+		},
+		resetActions: function(){
+			this.performedActionCount = 0;
+		}
+	};
+}
+
+function resetTeams(template){
+	let soldiersRed = template.soldiersRed.get();
+
+	for(let i=0; i<soldiersRed.length; i++){
+		let soldier = soldiersRed[i];
+		soldier.resetActions();
+	}
+
+	template.soldiersRed.set(soldiersRed);
+
+	let soldiersBlue = template.soldiersBlue.get();
+
+	for(let i=0; i<soldiersBlue.length; i++){
+		let soldier = soldiersBlue[i];
+		soldier.resetActions();
+	}
+
+	template.soldiersBlue.set(soldiersBlue);
+}

@@ -23,13 +23,12 @@ Template.tile.events({
 		const target = event.target;
 
 		if(this.selected){
+
 			if(getTileObj(this).isOccupied != true){				// nobody on the new space already
 				let soldier = this.selected;
-				console.log(soldier);
 
 				let prevX = soldier.x;
 				let prevY = soldier.y;
-				let prevMovement = soldier.movement;
 
 				// remove the highlighted squares
 				editMoveableSquares(this, soldier, false);
@@ -37,13 +36,16 @@ Template.tile.events({
 				// remove occupied info from the tile
 				getTileObjSpecific(this,prevX, prevY).flee();
 
-				console.log('moving to ' + this.x + ' ' + this.y);
-
-				// update coordinates
+				// update coordinates for the moved soldier
 				this.selected.move(this.x, this.y);
 
+				// track actions taken
+				incrementActionsTaken(template);
+
+				// handles the color of this new tile
 				getTileObj(this).occupy(this.selected);
 
+				// update the overall selected item
 				setSelectedOverall(template, null);
 			}
 		}
@@ -130,4 +132,22 @@ function editMoveableSquares(me, soldier, moveable){
 
 function setSelectedOverall(template, soldier){
 	template.view.parentView.parentView.parentView.parentView.parentView.parentView._templateInstance.selectedSoldier.set(soldier);
+}
+
+function incrementActionsTaken(template){
+	let actionsTaken = template.view.parentView
+			.parentView
+			.parentView
+			.parentView
+			.parentView
+			.parentView
+			._templateInstance.actionsTaken.get();
+
+	template.view.parentView
+		.parentView
+		.parentView
+		.parentView
+		.parentView
+		.parentView
+		._templateInstance.actionsTaken.set(actionsTaken + 1);
 }

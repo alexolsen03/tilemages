@@ -74,6 +74,13 @@ div{
 	background-color: #ddd;
 }
 
+.sign{
+	border-radius: 50%;
+	width: 25px;
+	height: 25px;
+	margin-left: 520px;
+}
+
 .teamA{
 	background-color: red;
 }

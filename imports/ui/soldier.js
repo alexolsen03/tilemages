@@ -80,40 +80,50 @@ function editMoveableSquares(me, soldier, moveable){
 	}
 }
 
-Template.soldier.onCreated(function(){
-
-});
-
 Template.soldier.helpers({
 	teamClass: function(){
 		if(this.soldier == null)
 			return '';
 		else
-			return this.soldier.team == 0 ? 'teamA' : 'teamB';
+			return this.soldier.teamA == true ? 'teamA' : 'teamB';
 	}
 })
 
 Template.soldier.events({
 	'click .soldier': function(event, template){
-		console.log('clicked a soldier');
 
 		let selectedSoldier = this.soldier;	// instance soldier
-		console.log(this.soldier);
 
-		if(selectedSoldier.performedActionCount < selectedSoldier.maxActions){
+		if(selectedSoldier.teamA === getActiveTeam(template)){	// is the clicked soldier the right team
 
-			if(this.selected)		// a soldier is active, need to inactivate it
-				editMoveableSquares(this, this.selected, false);
+			if(selectedSoldier.performedActionCount < selectedSoldier.maxActions){
 
-			// show moveable
-			editMoveableSquares(this, selectedSoldier, true);
+				if(this.selected)		// a soldier is active, need to inactivate it
+					editMoveableSquares(this, this.selected, false);
 
-			// set selected state
-			setSelectedOverall(template, selectedSoldier);
+				// show moveable
+				editMoveableSquares(this, selectedSoldier, true);
+
+				// set selected state
+				setSelectedOverall(template, selectedSoldier);
+			}
 		}
 	}
 });
 
 function setSelectedOverall(template, soldier){
 	template.view.parentView.parentView.parentView.parentView.parentView.parentView.parentView.parentView.parentView._templateInstance.selectedSoldier.set(soldier);
+}
+
+function getActiveTeam(template){
+	return template.view.parentView
+			.parentView
+			.parentView
+			.parentView
+			.parentView
+			.parentView
+			.parentView
+			.parentView
+			.parentView
+			._templateInstance.isAActive.get();
 }
