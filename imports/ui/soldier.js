@@ -18,6 +18,8 @@ function editMoveableSquares(me, soldier, moveable){
 	let MAX_RIGHT = 10;
 	let MAX_LEFT = -1;
 
+	let immovableTypes = ['water'];
+
 	let x = soldier.x;
 	let y = soldier.y;
 
@@ -26,56 +28,88 @@ function editMoveableSquares(me, soldier, moveable){
 	// go down
 	let ctr = ctrInit;
 	while(ctr < soldier.movement && x+ctr < MAX_BOTTOM){
-		getTileObj(me,x + ctr,y).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObj(me,x + ctr,y).type) != -1){
+			getTileObj(me,x + ctr,y).isMoveable = false;
+		}else{
+			getTileObj(me,x + ctr,y).isMoveable = moveable;
+		}
 		ctr++;
 	}
 
 	// go down right
-	ctr = ctrInit;
+	ctr = 0;
 	while(ctr < soldier.movement && x+ctr < MAX_BOTTOM && y+ctr <MAX_RIGHT){
-		getTileObj(me,x+ctr,y+ctr).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObj(me,x+ctr,y+ctr).type) != -1){
+			getTileObj(me,x+ctr,y+ctr).isMoveable = false;
+		}else{
+			getTileObj(me,x+ctr,y+ctr).isMoveable = moveable;
+		}
 		ctr++;
 	}
 
 	// go right
-	ctr = ctrInit;
+	ctr = 0;
 	while(ctr < soldier.movement && y+ctr < MAX_RIGHT){
-		getTileObj(me,x,y+ctr).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObj(me,x,y+ctr).type) != -1){
+			getTileObj(me,x,y+ctr).isMoveable = false;
+		}else{
+			getTileObj(me,x,y+ctr).isMoveable = moveable;
+		}
 		ctr++;
 	}
 
 	// go down left
-	ctr = ctrInit;
+	ctr = 0;
 	while(ctr < soldier.movement && x+ctr < MAX_BOTTOM && y-ctr > MAX_LEFT){
-		getTileObj(me,x+ctr,y-ctr).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObj(me,x+ctr,y-ctr).type) != -1){
+			getTileObj(me,x+ctr,y-ctr).isMoveable = false;
+		}else{
+			getTileObj(me,x+ctr,y-ctr).isMoveable = moveable;
+		}
 		ctr++;
 	}
 
 	// go left
-	ctr = ctrInit;
+	ctr = 0;
 	while(ctr < soldier.movement && y-ctr > MAX_LEFT){
-		getTileObj(me,x,y-ctr).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObj(me,x,y-ctr).type) != -1){
+			getTileObj(me,x,y-ctr).isMoveable = false;
+		}else{
+			getTileObj(me,x,y-ctr).isMoveable = moveable;
+		}
 		ctr++;
 	}
 
 	// go up left
-	ctr = ctrInit;
+	ctr = 0;
 	while(ctr < soldier.movement && x-ctr > MAX_TOP && y-ctr > MAX_LEFT){
-		getTileObj(me,x-ctr,y-ctr).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObj(me,x-ctr,y-ctr).type) != -1 ){
+			getTileObj(me,x-ctr,y-ctr).isMoveable = false;
+		}else{
+			getTileObj(me,x-ctr,y-ctr).isMoveable = moveable;
+		}
 		ctr++;
 	}
 
 	// go up
-	ctr = ctrInit;
+	ctr = 0;
 	while(ctr < soldier.movement && x-ctr > MAX_TOP){
-		getTileObj(me,x-ctr,y).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObj(me,x-ctr,y).type) != -1 ){
+			getTileObj(me,x-ctr,y).isMoveable = false;
+		}else{
+			getTileObj(me,x-ctr,y).isMoveable = moveable;
+		}
 		ctr++;
 	}
 
 	//go up right
-	ctr = ctrInit;
+	ctr = 0;
 	while(ctr < soldier.movement && x-ctr > MAX_TOP && y+ctr < MAX_RIGHT){
-		getTileObj(me,x-ctr,y+ctr).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObj(me,x-ctr,y+ctr).type) != -1 ){
+			getTileObj(me,x-ctr,y+ctr).isMoveable = false;
+		}else{
+			getTileObj(me,x-ctr,y+ctr).isMoveable = moveable;
+		}
 		ctr++;
 	}
 }

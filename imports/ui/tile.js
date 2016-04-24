@@ -70,62 +70,98 @@ function editMoveableSquares(me, soldier, moveable){
 	let MAX_RIGHT = 10;
 	let MAX_LEFT = -1;
 
+	let immovableTypes = ['water'];
+
 	let x = soldier.x;
 	let y = soldier.y;
+
+	console.log(immovableTypes.indexOf('water'));
 
 	// go down
 	let ctr = 0;
 	while(ctr < soldier.movement && x+ctr < MAX_BOTTOM){
-		getTileObjSpecific(me,x + ctr,y).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObjSpecific(me,x + ctr,y).type) != -1){
+			getTileObjSpecific(me,x + ctr,y).isMoveable = false;
+		}else{
+			getTileObjSpecific(me,x + ctr,y).isMoveable = moveable;
+		}
 		ctr++;
 	}
 
 	// go down right
 	ctr = 0;
 	while(ctr < soldier.movement && x+ctr < MAX_BOTTOM && y+ctr <MAX_RIGHT){
-		getTileObjSpecific(me,x+ctr,y+ctr).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObjSpecific(me,x+ctr,y+ctr).type) != -1){
+			getTileObjSpecific(me,x+ctr,y+ctr).isMoveable = false;
+		}else{
+			getTileObjSpecific(me,x+ctr,y+ctr).isMoveable = moveable;
+		}
 		ctr++;
 	}
 
 	// go right
 	ctr = 0;
 	while(ctr < soldier.movement && y+ctr < MAX_RIGHT){
-		getTileObjSpecific(me,x,y+ctr).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObjSpecific(me,x,y+ctr).type) != -1){
+			getTileObjSpecific(me,x,y+ctr).isMoveable = false;
+		}else{
+			getTileObjSpecific(me,x,y+ctr).isMoveable = moveable;
+		}
 		ctr++;
 	}
 
 	// go down left
 	ctr = 0;
 	while(ctr < soldier.movement && x+ctr < MAX_BOTTOM && y-ctr > MAX_LEFT){
-		getTileObjSpecific(me,x+ctr,y-ctr).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObjSpecific(me,x+ctr,y-ctr).type) != -1){
+			getTileObjSpecific(me,x+ctr,y-ctr).isMoveable = false;
+		}else{
+			getTileObjSpecific(me,x+ctr,y-ctr).isMoveable = moveable;
+		}
 		ctr++;
 	}
 
 	// go left
 	ctr = 0;
 	while(ctr < soldier.movement && y-ctr > MAX_LEFT){
-		getTileObjSpecific(me,x,y-ctr).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObjSpecific(me,x,y-ctr).type) != -1){
+			getTileObjSpecific(me,x,y-ctr).isMoveable = false;
+		}else{
+			getTileObjSpecific(me,x,y-ctr).isMoveable = moveable;
+		}
 		ctr++;
 	}
 
 	// go up left
 	ctr = 0;
 	while(ctr < soldier.movement && x-ctr > MAX_TOP && y-ctr > MAX_LEFT){
-		getTileObjSpecific(me,x-ctr,y-ctr).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObjSpecific(me,x-ctr,y-ctr).type) != -1 ){
+			getTileObjSpecific(me,x-ctr,y-ctr).isMoveable = false;
+		}else{
+			getTileObjSpecific(me,x-ctr,y-ctr).isMoveable = moveable;
+		}
 		ctr++;
 	}
 
 	// go up
 	ctr = 0;
 	while(ctr < soldier.movement && x-ctr > MAX_TOP){
-		getTileObjSpecific(me,x-ctr,y).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObjSpecific(me,x-ctr,y).type) != -1 ){
+			getTileObjSpecific(me,x-ctr,y).isMoveable = false;
+		}else{
+			getTileObjSpecific(me,x-ctr,y).isMoveable = moveable;
+		}
 		ctr++;
 	}
 
 	//go up right
 	ctr = 0;
 	while(ctr < soldier.movement && x-ctr > MAX_TOP && y+ctr < MAX_RIGHT){
-		getTileObjSpecific(me,x-ctr,y+ctr).isMoveable = moveable;
+		if(immovableTypes.indexOf(getTileObjSpecific(me,x-ctr,y+ctr).type) != -1 ){
+			getTileObjSpecific(me,x-ctr,y+ctr).isMoveable = false;
+		}else{
+			getTileObjSpecific(me,x-ctr,y+ctr).isMoveable = moveable;
+		}
 		ctr++;
 	}
 }
