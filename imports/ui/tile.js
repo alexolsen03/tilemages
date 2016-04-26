@@ -22,9 +22,11 @@ Template.tile.events({
 	'click .tile.moveable': function(event, template){
 		const target = event.target;
 
-		if(this.selected){
+		console.log(getIsTerraforming(template));
 
-			if(getTileObj(this).isOccupied != true){				// nobody on the new space already
+		if(this.selected && !getIsTerraforming(template)){	// if there is a selected soldier and not terraforming
+
+			if(getTileObj(this).isOccupied != true){			// nobody on the tile already
 				let soldier = this.selected;
 
 				let prevX = soldier.x;
@@ -48,6 +50,20 @@ Template.tile.events({
 				// update the overall selected item
 				setSelectedOverall(template, null);
 			}
+		}else{							// is terraforming
+			getTileObj(this).terraform('land', '1');
+
+			this.selected.incrementAction(2);	// terraforming takes the soldiers actions
+
+			// track actions taken
+			incrementActionsTaken(template);
+			incrementActionsTaken(template);	// terraforming takes 2 actions
+
+			editTerraformableSquares(this, false);
+			setIsTerraforming(template, false);
+
+			// update the overall selected item
+			setSelectedOverall(template, null);
 		}
 	},
 });
@@ -168,6 +184,14 @@ function setSelectedOverall(template, soldier){
 	template.view.parentView.parentView.parentView.parentView.parentView.parentView._templateInstance.selectedSoldier.set(soldier);
 }
 
+function getIsTerraforming(template){
+	return template.view.parentView.parentView.parentView.parentView.parentView.parentView._templateInstance.isTerraformingState.get();
+}
+
+function setIsTerraforming(template, terraforming){
+	template.view.parentView.parentView.parentView.parentView.parentView.parentView._templateInstance.isTerraformingState.set(terraforming);
+}
+
 function incrementActionsTaken(template){
 	let actionsTaken = template.view.parentView
 			.parentView
@@ -184,4 +208,200 @@ function incrementActionsTaken(template){
 		.parentView
 		.parentView
 		._templateInstance.actionsTaken.set(actionsTaken + 1);
+}
+
+function editTerraformableSquares(me, moveable){
+	let soldier = me.selected;
+
+	let tileReach = 3;
+
+	let MAX_BOTTOM = 10;
+	let MAX_TOP = -1;
+	let MAX_RIGHT = 10;
+	let MAX_LEFT = -1;
+
+	let x = soldier.x;
+	let y = soldier.y;
+
+	let ctrInit = 1;
+
+	// go down
+	let ctr = ctrInit;
+	while(ctr < tileReach && x+ctr < MAX_BOTTOM){
+		if(me.board[x+ctr][y].soldier != null){
+			me.board[x + ctr][y].isMoveable = false;
+		}else{
+			me.board[x + ctr][y].isMoveable = moveable;
+		}
+		ctr++;
+	}
+
+	// go down right
+	ctr = 0;
+	while(ctr < tileReach && x+ctr < MAX_BOTTOM && y+ctr <MAX_RIGHT){
+		if(me.board[x + ctr][y + ctr].soldier != null){
+			me.board[x + ctr][y + ctr].isMoveable = false;
+		}else{
+			me.board[x + ctr][y + ctr].isMoveable = moveable;
+		}
+		ctr++;
+	}
+
+	// go right
+	ctr = 0;
+	while(ctr < tileReach && y+ctr < MAX_RIGHT){
+		if(me.board[x][y + ctr].soldier != null){
+			me.board[x][y + ctr].isMoveable = false;
+		}else{
+			me.board[x][y + ctr].isMoveable = moveable;
+		}
+		ctr++;
+	}
+
+	// go down left
+	ctr = 0;
+	while(ctr < tileReach && x+ctr < MAX_BOTTOM && y-ctr > MAX_LEFT){
+		if(me.board[x + ctr][y - ctr].soldier != null){
+			me.board[x + ctr][y - ctr].isMoveable = false;
+		}else{
+			me.board[x + ctr][y - ctr].isMoveable = moveable;
+		}
+		ctr++;
+	}
+
+	// go left
+	ctr = 0;
+	while(ctr < tileReach && y-ctr > MAX_LEFT){
+		if(me.board[x][y - ctr].soldier != null){
+			me.board[x][y - ctr].isMoveable = false;
+		}else{
+			me.board[x][y - ctr].isMoveable = moveable;
+		}
+		ctr++;
+	}
+
+	// go up left
+	ctr = 0;
+	while(ctr < tileReach && x-ctr > MAX_TOP && y-ctr > MAX_LEFT){
+		if(me.board[x - ctr][y - ctr].soldier != null){
+			me.board[x - ctr][y - ctr].isMoveable = false;
+		}else{
+			me.board[x-ctr][y-ctr].isMoveable = moveable;
+		}
+		ctr++;
+	}
+
+	// go up
+	ctr = 0;
+	while(ctr < tileReach && x-ctr > MAX_TOP){
+		if(me.board[x - ctr][y].soldier != null){
+			me.board[x - ctr][y].isMoveable = false;
+		}else{
+			me.board[x - ctr][y].isMoveable = moveable;
+		}
+		ctr++;
+	}
+
+	//go up right
+	ctr = 0;
+	while(ctr < tileReach && x-ctr > MAX_TOP && y+ctr < MAX_RIGHT){
+		if(me.board[x - ctr][y + ctr].soldier != null){
+			me.board[x - ctr][y + ctr].isMoveable = false;
+		}else{
+			me.board[x - ctr][y + ctr].isMoveable = moveable;
+		}
+		ctr++;
+	}
+
+	// knight top right
+	ctr = 0;
+	while(ctr < 1 && x-ctr > MAX_TOP && y+ctr < MAX_RIGHT){
+
+		if(x-2 > MAX_TOP && y+1 < MAX_RIGHT){
+			if(me.board[x - 2][y + 1].soldier != null){
+				me.board[x - 2][y + 1].isMoveable = false;
+			}else{
+				me.board[x - 2][y + 1].isMoveable = moveable;
+			}
+		}
+
+		if(x - 1 > MAX_TOP && y+2 < MAX_RIGHT){
+			if(me.board[x - 1][y + 2].soldier != null){
+				me.board[x - 1][y + 2].isMoveable = false;
+			}else{
+				me.board[x - 1][y + 2].isMoveable = moveable;
+			}
+		}
+
+		ctr++;
+	}
+
+	// knight bottom right
+	ctr = 0;
+	while(ctr < 1 && x+ctr < MAX_BOTTOM && y+ctr <MAX_RIGHT){
+
+		if(x+2 < MAX_BOTTOM && y+1 < MAX_RIGHT){
+			if(me.board[x + 2][y + 1].soldier != null){
+				me.board[x + 2][y + 1].isMoveable = false;
+			}else{
+				me.board[x + 2][y + 1].isMoveable = moveable;
+			}
+		}
+
+		if(x+1 < MAX_BOTTOM && y + 2 < MAX_RIGHT){
+			if(me.board[x + 1][y + 2].soldier != null){
+				me.board[x + 1][y + 2].isMoveable = false;
+			}else{
+				me.board[x + 1][y + 2].isMoveable = moveable;
+			}
+		}
+
+		ctr++;
+	}
+
+	// knight bottom left
+	ctr = 0;
+	while(ctr < 1 && x+ctr < MAX_BOTTOM && y-ctr > MAX_LEFT){
+
+		if(x+2 < MAX_BOTTOM && y - 1 > MAX_LEFT){
+			if(me.board[x + 2][y - 1].soldier != null){
+				me.board[x + 2][y - 1].isMoveable = false;
+			}else{
+				me.board[x + 2][y - 1].isMoveable = moveable;
+			}
+		}
+
+		if(x+1 < MAX_BOTTOM && y - 2 > MAX_LEFT){
+			if(me.board[x + 1][y - 2].soldier != null){
+				me.board[x + 1][y - 2].isMoveable = false;
+			}else{
+				me.board[x + 1][y - 2].isMoveable = moveable;
+			}
+		}
+
+		ctr++;
+	}
+
+	// knight top left
+	ctr = 0;
+	while(ctr < 1 && x-ctr > MAX_TOP && y-ctr > MAX_LEFT){
+
+		if(x - 2 > MAX_TOP && y - 1 > MAX_LEFT){
+			if(me.board[x - 2][y - 1].soldier != null){
+				me.board[x - 2][y - 1].isMoveable = false;
+			}else{
+				me.board[x - 2][y - 1].isMoveable = moveable;
+			}
+		}
+
+		if(x - 1 > MAX_TOP && y - 2 > MAX_LEFT){
+			if(me.board[x - 1][y - 2].soldier != null){
+				me.board[x - 1][y - 2].isMoveable = false;
+			}else{
+				me.board[x - 1][y - 2].isMoveable = moveable;
+			}
+		}
+
+		ctr++;
+	}
 }
