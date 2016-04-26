@@ -41,7 +41,7 @@ div{
 }
 
 .tile.moveable{
-	background-color: yellow;
+	border: 5px solid yellow;
 }
 
 .land0{

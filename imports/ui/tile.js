@@ -75,8 +75,6 @@ function editMoveableSquares(me, soldier, moveable){
 	let x = soldier.x;
 	let y = soldier.y;
 
-	console.log(immovableTypes.indexOf('water'));
-
 	// go down
 	let ctr = 0;
 	while(ctr < soldier.movement && x+ctr < MAX_BOTTOM){

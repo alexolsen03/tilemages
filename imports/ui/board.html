@@ -8,6 +8,12 @@
 	<button class='inserter'>
 		Insert Soldier
 	</button>
+
+	{{#if isSelectedMage}}
+		<button class='terraform'>
+			Terraform tiles
+		</button>
+	{{/if}}
 	{{#each row in board}}
 		<div class='row'>
 			{{#each r in row}}
