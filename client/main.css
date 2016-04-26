@@ -41,7 +41,7 @@ div{
 }
 
 .tile.moveable{
-	background-color: yellow;
+	border: 5px solid yellow;
 }
 
 .land0{
@@ -72,6 +72,17 @@ div{
 	width: 25px;
 	height: 25px;
 	background-color: #ddd;
+}
+
+.soldier.mage{
+	border-radius: 0;
+}
+
+.sign{
+	border-radius: 50%;
+	width: 25px;
+	height: 25px;
+	margin-left: 520px;
 }
 
 .teamA{
