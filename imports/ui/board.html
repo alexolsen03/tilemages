@@ -1,8 +1,19 @@
 <template name='board'>
 	<h1>BOARD</h1>
+	{{#if isAActive}}
+		<div class='teamA sign'></div>
+	{{else}}
+		<div class='teamB sign'></div>
+	{{/if}}
 	<button class='inserter'>
 		Insert Soldier
 	</button>
+
+	{{#if isSelectedMage}}
+		<button class='terraform'>
+			Terraform tiles
+		</button>
+	{{/if}}
 	{{#each row in board}}
 		<div class='row'>
 			{{#each r in row}}
