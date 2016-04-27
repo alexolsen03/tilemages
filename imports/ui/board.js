@@ -1,5 +1,7 @@
 import './board.html';
 
+const MAX_ACTIONS = 2;
+
 Template.board.onCreated(function(){
 	this.board = new ReactiveVar([
 			[    // ROW 1
@@ -171,6 +173,8 @@ Template.board.onCreated(function(){
 	this.isAActive = new ReactiveVar(true); // 0 is teamA, 1 is teamB
 
 	this.isTerraformingState = new ReactiveVar(false);
+
+	this.terraformingType = new ReactiveVar('land0');
 });
 
 Template.board.helpers({
@@ -192,7 +196,7 @@ Template.board.helpers({
 		return false;
 	},
 	actionsTaken: function(){
-		return Template.instance().actionsTaken.get();
+		return MAX_ACTIONS - Template.instance().actionsTaken.get();
 	},
 	ableToTerraform: function(){
 		if(Template.instance().actionsTaken.get() < 3){
@@ -209,6 +213,10 @@ Template.board.helpers({
 		}else{
 			return false;
 		}
+	},
+	isTerraformingState: function(){
+		Template.instance().terraformingType.set('land0');
+		return Template.instance().isTerraformingState.get();
 	}
 });
 
@@ -216,7 +224,7 @@ Template.board.events({
 	'click .tile': function(event, template){
 
 		// this will be tracking actions taken and will flip the turn if all actions taken
-		if(Template.instance().actionsTaken.get() > 3){
+		if(Template.instance().actionsTaken.get() >= MAX_ACTIONS){
 
 			if(template.isTerraformingState.get()){
 				editTerraformableSquares(template, false);		// reset any squares
@@ -273,6 +281,11 @@ Template.board.events({
 
 		// resets board after other templates events have finished
 		template.board.set(template.board.get());
+	},
+	'click .terra-state': function(event, template){
+		console.log(event.target.value);
+
+		template.terraformingType.set(event.target.value);
 	}
 });
 

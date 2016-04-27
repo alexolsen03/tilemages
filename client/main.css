@@ -44,6 +44,10 @@ div{
 	border: 5px solid yellow;
 }
 
+.terra-state, form{
+	font-size: 12pt;
+}
+
 .land0{
 	background-color: #4dff88;
 }

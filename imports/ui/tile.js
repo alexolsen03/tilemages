@@ -50,8 +50,12 @@ Template.tile.events({
 				// update the overall selected item
 				setSelectedOverall(template, null);
 			}
-		}else{							// is terraforming
-			getTileObj(this).terraform('land', '1');
+		}else{
+			let type = getTerraformingType(template);
+			let depth = type[type.length - 1];
+			let landType = type.substring(0, type.length -1);
+
+			getTileObj(this).terraform(landType, depth);
 
 			this.selected.incrementAction(2);	// terraforming takes the soldiers actions
 
@@ -178,6 +182,10 @@ function editMoveableSquares(me, soldier, moveable){
 		}
 		ctr++;
 	}
+}
+
+function getTerraformingType(template){
+	return template.view.parentView.parentView.parentView.parentView.parentView.parentView._templateInstance.terraformingType.get();
 }
 
 function setSelectedOverall(template, soldier){

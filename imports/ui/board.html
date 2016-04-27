@@ -20,6 +20,16 @@
 		</button>
 	{{/if}}
 
+	{{#if isTerraformingState}}
+		<div>
+			<form>
+				  <input type="radio" name="terra" class="terra-state" value="land0" checked/>Land <br>
+				  <input type="radio" name="terra" class="terra-state" value="land1"/> Hill<br>
+				  <input type="radio" name="terra" class="terra-state" value="water0"> Water
+			</form>
+		</div>
+	{{/if}}
+
 	{{#each row in board}}
 		<div class='row'>
 			{{#each r in row}}
