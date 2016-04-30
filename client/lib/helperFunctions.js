@@ -1,5 +1,5 @@
 
-function calculateMoveableSquares(startY, startX,pathsFound,stepsTaken, MAX_STEPS){
+function calculateMoveableSquares(board, startY, startX,pathsFound,stepsTaken, MAX_STEPS){
 
   let start = board[startY][startX];
 
@@ -12,58 +12,59 @@ function calculateMoveableSquares(startY, startX,pathsFound,stepsTaken, MAX_STEP
   if(stepsTaken > MAX_STEPS)
   	return false;
 
-  start.moveable = true;
+  start.isMoveable = true;
 
   let north = startY - 1;
   let east = startX + 1;
   let south = startY + 1;
   let west = startX - 1;
 
-  if(north > -1 && north < 5)
- 	goDirection(north, startX, localPathsFound, stepsTaken);	// NORTH
+  if(north > -1 && north < 10)
+ 	goDirection(board, north, startX, localPathsFound, stepsTaken, MAX_STEPS);	// NORTH
 
-  if(north > -1 && north < 5 && east < 5 && east > -1)
-  	goDirection(north, east, localPathsFound, stepsTaken);	// NORTH EAST
+  if(north > -1 && north < 10 && east < 10 && east > -1)
+  	goDirection(board, north, east, localPathsFound, stepsTaken, MAX_STEPS);	// NORTH EAST
 
-  if(east < 5 && east > -1)
-  	goDirection(startY, east, localPathsFound, stepsTaken);	// EAST
+  if(east < 10 && east > -1)
+  	goDirection(board, startY, east, localPathsFound, stepsTaken, MAX_STEPS);	// EAST
 
-  if(south < 5 && south > -1 && east < 5 && east > -1)
-  	goDirection(south, east, localPathsFound, stepsTaken);	// SOUTH EAST
+  if(south < 10 && south > -1 && east < 10 && east > -1)
+  	goDirection(board, south, east, localPathsFound, stepsTaken, MAX_STEPS);	// SOUTH EAST
 
-  if(south < 5 && south > -1)
-  	goDirection(south, startX, localPathsFound, stepsTaken);	// SOUTH
+  if(south < 10 && south > -1)
+  	goDirection(board, south, startX, localPathsFound, stepsTaken, MAX_STEPS);	// SOUTH
 
-  if(south < 5 && south > -1 && west > -1 && west < 5)
-  	goDirection(south, west, localPathsFound, stepsTaken);	// SOUTH WEST
+  if(south < 10 && south > -1 && west > -1 && west < 10)
+  	goDirection(board, south, west, localPathsFound, stepsTaken, MAX_STEPS);	// SOUTH WEST
 
-  if(west > -1 && west < 5)
-  	goDirection(startY, west, localPathsFound, stepsTaken);	// WEST
+  if(west > -1 && west < 10)
+  	goDirection(board, startY, west, localPathsFound, stepsTaken, MAX_STEPS);	// WEST
 
-  if(north > -1 && north < 5 && west > -1 && west < 5)
-  	goDirection(north, west, localPathsFound, stepsTaken);	// NORTH WEST
+  if(north > -1 && north < 10 && west > -1 && west < 10)
+  	goDirection(board, north, west, localPathsFound, stepsTaken, MAX_STEPS);	// NORTH WEST
 
   return false;
 }
 
-function goDirection(y,x, localPathsFound, stepsTaken){
+function goDirection(board,y,x, localPathsFound, stepsTaken, MAX_STEPS){
   stepsTaken++;
 
-  if(board[y][x].type != 'water')
-  	calculateMoveableSquares(y, x, localPathsFound, stepsTaken, MAX_STEPS);
+  if(board[y][x].type != 'water' &&
+      board[y][x].soldier == null)
+  	calculateMoveableSquares(board,y, x, localPathsFound, stepsTaken, MAX_STEPS);
   else
   	return false;
 }
 
 function haveVisitedTile(tile, stepsTaken, pathsFound){
-	let y = tile.y;
+  let y = tile.y;
   let x = tile.x;
 
   let id = y+1 * 10 + x; // should be unique id
 
-	for(let i=0; i<stepsTaken; i++){
+  for(let i=0; i<stepsTaken; i++){
   	if(pathsFound[i] == id)
-    	return true;
+    	 return true;
   }
 
   return false;
@@ -176,5 +177,6 @@ export {
   clearSelectableTiles,
   getTilesAdjacentToPoint,
   resetTeams,
-  editTerraformableSquares
+  editTerraformableSquares,
+  calculateMoveableSquares
 }

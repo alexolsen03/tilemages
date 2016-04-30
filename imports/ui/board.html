@@ -39,4 +39,19 @@
 		</div>
 	{{/each}}
 
+	{{#each s in soldiersRedTaken}}
+		<div class='taken-soldiers'>
+			{{> soldier soldier=s }}
+		</div>
+	{{/each}}
+
+	<div>
+	</div>
+
+	{{#each s in soldiersBlueTaken}}
+		<div class='taken-soldiers'>
+			{{> soldier soldier=s }}
+		</div>
+	{{/each}}
+
 </template>

@@ -4,10 +4,6 @@ import { clearSelectableTiles,
 	editTerraformableSquares
 } from '../../client/lib/helperFunctions.js';
 
-Template.tile.onCreated(function(){
-
-});
-
 Template.tile.helpers({
 	attributes: function(){
 		return {
@@ -35,7 +31,7 @@ Template.tile.events({
 				let prevY = soldier.y;
 
 				// remove the highlighted squares
-				editMoveableTiles(this, false, soldier, 3); // 3 is max movement as of now
+				clearSelectableTiles(this.board);
 
 				// figure out how far the soldier moved
 				let range = calculateMovedRange(prevX, prevY, this.x, this.y);
@@ -81,7 +77,7 @@ Template.tile.events({
 			incrementActionsTaken(template);
 			incrementActionsTaken(template);	// terraforming takes 2 actions
 
-			clearSelectableTiles();
+			clearSelectableTiles(this.board);
 			setIsTerraforming(template, false);
 
 			// update the overall selected item
@@ -150,31 +146,6 @@ function incrementActionsTaken(template){
 		.parentView
 		.parentView
 		._templateInstance.actionsTaken.set(actionsTaken + 1);
-}
-
-
-/*
-	REMOVE THE BOTTOM TWO METHODS AFTER IMPLEMENTING THE PATH SYSTEM
-*/
-function editMoveableTiles(me, moveable, soldier, spaces){
-
-	let moveableTiles = [];
-	for(let n=0; n < spaces; n++){
-		let nthSpaceTiles = getTilesAdjacentToPoint(me.board, soldier.x, soldier.y, n + 1);
-		moveableTiles = moveableTiles.concat(nthSpaceTiles);
-	}
-
-	for(let i=0; i<moveableTiles.length; i++){
-		let moveableTile = moveableTiles[i];
-
-		if(moveableTile.type == 'water' ||
-		    moveableTile.soldier != null){
-
-			getTileObjSpecific(me, moveableTile.x, moveableTile.y).isMoveable = false;
-		}else{
-			getTileObjSpecific(me, moveableTile.x, moveableTile.y).isMoveable = moveable;
-		}
-	}
 }
 
 function calculateMovedRange(x1, y1, x2, y2){

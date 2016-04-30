@@ -44,8 +44,16 @@ div{
 	border: 5px solid yellow;
 }
 
-.terra-state, form{
+.terra-state, form, .taken-soldiers{
 	font-size: 12pt;
+}
+
+.taken-soldiers{
+	display: inline-block;
+	line-height: 1;
+	height: 50px;
+	width: 50px;
+	position: relative;
 }
 
 .land0{
@@ -75,7 +83,7 @@ div{
 	border-radius: 50%;
 	width: 30px;
 	height: 30px;
-	background-color: white;
+	background-color: green;
 	background-image: url('/images/sword.png');
 	background-position: 0 0;
 	background-repeat: round;

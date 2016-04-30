@@ -134,7 +134,7 @@ Template.board.onCreated(function(){
 	this.selectedSoldier = new ReactiveVar(null);
 
 	let startRowRed = 0;
-	let startRowBlack = 9;
+	let startRowBlack = 3;
 
 	this.soldiersRed = new ReactiveVar([
 		buildSoldier(1,true,startRowRed,0,2,'soldier', 2),
@@ -149,6 +149,8 @@ Template.board.onCreated(function(){
 		buildSoldier(10,true,startRowRed,9,2,'soldier', 2),
 	]);
 
+	this.soldiersRedTaken = new ReactiveVar([]);
+
 	this.soldiersBlue = new ReactiveVar([
 		buildSoldier(11,false,startRowBlack,0,2,'soldier', 2),
 		buildSoldier(12,false,startRowBlack,1,3,'knight', 2),
@@ -161,6 +163,8 @@ Template.board.onCreated(function(){
 		buildSoldier(19,false,startRowBlack,8,3,'knight', 2),
 		buildSoldier(20,false,startRowBlack,9,2,'soldier', 2)
 	]);
+
+	this.soldiersBlueTaken = new ReactiveVar([]);
 
 	// add the soldiers to the field
 	for(let i=0;i<this.soldiersRed.get().length;i++){
@@ -222,6 +226,12 @@ Template.board.helpers({
 	isTerraformingState: function(){
 		Template.instance().terraformingType.set('land0');
 		return Template.instance().isTerraformingState.get();
+	},
+	soldiersRedTaken: function(){
+		return Template.instance().soldiersRedTaken.get();
+	},
+	soldiersBlueTaken: function(){
+		return Template.instance().soldiersBlueTaken.get();
 	}
 });
 
@@ -366,8 +376,22 @@ function checkForBattleVictories(board){
 	for(let i=0; i<lostSoldiers.length; i++){
 		let tile = lostSoldiers[i];
 
+		console.log('blah!' + tile.soldier.teamA);
+
+		if(tile.soldier.teamA){
+			let arr = Template.instance().soldiersRedTaken.get();
+			arr.push(tile.soldier);
+			Template.instance().soldiersRedTaken.set(arr);
+		}else{
+			let arr = Template.instance().soldiersBlueTaken.get();
+			arr.push(tile.soldier);
+			Template.instance().soldiersBlueTaken.set(arr);
+		}
+
 		tile.flee();		// remove soldier from tile
 	}
+
+
 }
 
 function buildTile(x, y, type, depth){
