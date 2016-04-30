@@ -27,7 +27,7 @@ body{
     background-image: linear-gradient(to bottom,#d7d7d7 0%,#eeeeee 116px);
 }
 
-div{
+div.row, div.tile{
 	line-height: 0;
 	margin: 0px;
 	outline: none;
@@ -50,16 +50,17 @@ div{
 .tile{
 	position: relative;
 	display: inline-block;
-	box-sizing: border-box;;
+	box-sizing: border-box;
 	height: 50px;
 	width: 50px;
 	border-right: 1px solid #888;
 	border-bottom: 1px solid #888;
-
+	border-top: 1px solid transparent;
+	border-left: 1px solid transparent;
 }
 
 .tile.moveable{
-	border: 5px solid yellow;
+	border: 1px solid yellow;
 }
 
 .terra-state, form, .taken-soldiers{
@@ -105,7 +106,7 @@ div{
 	background-image: url('/images/sword.png');
 	background-position: 0 0;
 	background-repeat: round;
-	border: 1px solid black;
+	border: 2px solid black;
 }
 
 .soldier.mage{
@@ -125,6 +126,7 @@ div{
 	width: 25px;
 	height: 25px;
 	margin-left: 520px;
+	border: 2px solid black;
 }
 
 .teamA{

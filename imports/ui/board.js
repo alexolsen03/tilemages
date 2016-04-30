@@ -134,7 +134,7 @@ Template.board.onCreated(function(){
 	this.selectedSoldier = new ReactiveVar(null);
 
 	let startRowRed = 0;
-	let startRowBlack = 3;
+	let startRowBlack = 9;
 
 	this.soldiersRed = new ReactiveVar([
 		buildSoldier(1,true,startRowRed,0,2,'soldier', 2),
@@ -179,7 +179,7 @@ Template.board.onCreated(function(){
 
 	this.actionsTaken = new ReactiveVar(0);
 
-	this.isAActive = new ReactiveVar(true); // 0 is teamA, 1 is teamB
+	this.isAActive = new ReactiveVar(false); // 0 is teamA, 1 is teamB
 
 	this.isTerraformingState = new ReactiveVar(false);
 
