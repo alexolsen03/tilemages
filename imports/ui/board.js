@@ -1,4 +1,9 @@
 import './board.html';
+import { clearSelectableTiles,
+	getTilesAdjacentToPoint,
+	resetTeams,
+	editTerraformableSquares
+} from '../../client/lib/helperFunctions.js';
 
 const MAX_ACTIONS = 2;
 
@@ -33,8 +38,8 @@ Template.board.onCreated(function(){
 				buildTile(2,1,'land',0),
 				buildTile(2,2,'land',0),
 				buildTile(2,3,'land',0),
-				buildTile(2,4,'water',0),
-				buildTile(2,5,'water',0),
+				buildTile(2,4,'land',0),
+				buildTile(2,5,'land',0),
 				buildTile(2,6,'land',0),
 				buildTile(2,7,'land',0),
 				buildTile(2,8,'land',0),
@@ -54,26 +59,26 @@ Template.board.onCreated(function(){
 			],
 			[    // ROW 5
 				buildTile(4,0,'land',0),
-				buildTile(4,1,'water',0),
+				buildTile(4,1,'land',0),
 				buildTile(4,2,'land',0),
 				buildTile(4,3,'land',0),
 				buildTile(4,4,'land',0),
 				buildTile(4,5,'land',0),
 				buildTile(4,6,'land',0),
 				buildTile(4,7,'land',0),
-				buildTile(4,8,'water',0),
+				buildTile(4,8,'land',0),
 				buildTile(4,9,'land',0),
 			],
 			[    // ROW 6
 				buildTile(5,0,'land',0),
-				buildTile(5,1,'water',0),
+				buildTile(5,1,'land',0),
 				buildTile(5,2,'land',0),
 				buildTile(5,3,'land',0),
 				buildTile(5,4,'land',0),
 				buildTile(5,5,'land',0),
 				buildTile(5,6,'land',0),
 				buildTile(5,7,'land',0),
-				buildTile(5,8,'water',0),
+				buildTile(5,8,'land',0),
 				buildTile(5,9,'land',0),
 			],
 			[    // ROW 7
@@ -93,8 +98,8 @@ Template.board.onCreated(function(){
 				buildTile(7,1,'land',0),
 				buildTile(7,2,'land',0),
 				buildTile(7,3,'land',0),
-				buildTile(7,4,'water',0),
-				buildTile(7,5,'water',0),
+				buildTile(7,4,'land',0),
+				buildTile(7,5,'land',0),
 				buildTile(7,6,'land',0),
 				buildTile(7,7,'land',0),
 				buildTile(7,8,'land',0),
@@ -132,29 +137,29 @@ Template.board.onCreated(function(){
 	let startRowBlack = 9;
 
 	this.soldiersRed = new ReactiveVar([
-		buildSoldier(1,true,startRowRed,0,2,'soldier'),
-		buildSoldier(2,true,startRowRed,1,2,'soldier'),
-		buildSoldier(3,true,startRowRed,2,2,'mage'),
-		buildSoldier(4,true,startRowRed,3,2,'soldier'),
-		buildSoldier(5,true,startRowRed,4,2,'soldier'),
-		buildSoldier(6,true,startRowRed,5,2,'soldier'),
-		buildSoldier(7,true,startRowRed,6,2,'soldier'),
-		buildSoldier(8,true,startRowRed,7,2,'mage'),
-		buildSoldier(9,true,startRowRed,8,2,'soldier'),
-		buildSoldier(10,true,startRowRed,9,2,'soldier'),
+		buildSoldier(1,true,startRowRed,0,2,'soldier', 2),
+		buildSoldier(2,true,startRowRed,1,3,'knight', 2),
+		buildSoldier(3,true,startRowRed,2,2,'mage', 2),
+		buildSoldier(4,true,startRowRed,3,2,'archer', 2),
+		buildSoldier(5,true,startRowRed,4,2,'soldier', 2),
+		buildSoldier(6,true,startRowRed,5,2,'soldier', 2),
+		buildSoldier(7,true,startRowRed,6,2,'archer', 2),
+		buildSoldier(8,true,startRowRed,7,2,'mage', 2),
+		buildSoldier(9,true,startRowRed,8,3,'knight', 2),
+		buildSoldier(10,true,startRowRed,9,2,'soldier', 2),
 	]);
 
 	this.soldiersBlue = new ReactiveVar([
-		buildSoldier(11,false,startRowBlack,0,2,'soldier'),
-		buildSoldier(12,false,startRowBlack,1,2,'soldier'),
-		buildSoldier(13,false,startRowBlack,2,2,'mage'),
-		buildSoldier(14,false,startRowBlack,3,2,'soldier'),
-		buildSoldier(15,false,startRowBlack,4,2,'soldier'),
-		buildSoldier(16,false,startRowBlack,5,2,'soldier'),
-		buildSoldier(17,false,startRowBlack,6,2,'soldier'),
-		buildSoldier(18,false,startRowBlack,7,2,'mage'),
-		buildSoldier(19,false,startRowBlack,8,2,'soldier'),
-		buildSoldier(20,false,startRowBlack,9,2,'soldier')
+		buildSoldier(11,false,startRowBlack,0,2,'soldier', 2),
+		buildSoldier(12,false,startRowBlack,1,3,'knight', 2),
+		buildSoldier(13,false,startRowBlack,2,2,'mage', 2),
+		buildSoldier(14,false,startRowBlack,3,2,'archer', 2),
+		buildSoldier(15,false,startRowBlack,4,2,'soldier', 2),
+		buildSoldier(16,false,startRowBlack,5,2,'soldier', 2),
+		buildSoldier(17,false,startRowBlack,6,2,'archer', 2),
+		buildSoldier(18,false,startRowBlack,7,2,'mage', 2),
+		buildSoldier(19,false,startRowBlack,8,3,'knight', 2),
+		buildSoldier(20,false,startRowBlack,9,2,'soldier', 2)
 	]);
 
 	// add the soldiers to the field
@@ -225,69 +230,55 @@ Template.board.events({
 
 		// this will be tracking actions taken and will flip the turn if all actions taken
 		if(Template.instance().actionsTaken.get() >= MAX_ACTIONS){
-
-			if(template.isTerraformingState.get()){
-				editTerraformableSquares(template, false);		// reset any squares
-				template.isTerraformingState.set(false);
-			}
-
-			template.selectedSoldier.set(null);
-
-			checkForBattleVictories(Template.instance().board.get());
-
-			resetTeams(template);								// reset soldier movement ct
-			Template.instance().actionsTaken.set(0);					// reset actions taken count
-			Template.instance().isAActive.set(!Template.instance().isAActive.get()); 	// flip the turn
+			endTurn();
 		}
 
 		// resets board after other templates events have finished
-		template.board.set(template.board.get());
-	},
-
-	'click .inserter': function(event, template){
-		let rx = Math.floor(Math.random() * 10);
-		let ry = Math.floor(Math.random() * 10);
-
-		template.board.get()[rx][ry].occupy({ name: 'soldier'});
-
 		template.board.set(template.board.get());
 	},
 
 	'click .terraform': function(event, template){
 
 		if(template.isTerraformingState.get()){
-			editTerraformableSquares(template, false);
+			clearSelectableTiles(template.board.get());
 			template.selectedSoldier.set(null);
 		}else{
-			editTerraformableSquares(template, true);
+			editTerraformableSquares(template.board.get(),
+						       template.selectedSoldier.get().x,
+						       template.selectedSoldier.get().y,
+						       true);
 		}
 
 		template.isTerraformingState.set(!template.isTerraformingState.get());
 		template.board.set(template.board.get());	// redraw
 	},
 	'click .end-turn': function(event, template){
-		if(template.isTerraformingState.get()){
-			editTerraformableSquares(template, false);		// reset any squares
-			template.isTerraformingState.set(false);
-		}
 
-		template.selectedSoldier.set(null);
-
-		checkForBattleVictories(Template.instance().board.get());
-
-		resetTeams(template);								// reset soldier movement ct
-		Template.instance().actionsTaken.set(0);					// reset actions taken count
-		Template.instance().isAActive.set(!Template.instance().isAActive.get()); 	// flip the turn
+		endTurn();
 
 		// resets board after other templates events have finished
 		template.board.set(template.board.get());
 	},
 	'click .terra-state': function(event, template){
-		console.log(event.target.value);
-
 		template.terraformingType.set(event.target.value);
 	}
 });
+
+function endTurn(){
+	clearSelectableTiles(Template.instance().board.get());				// clear any moveable tiles - redundancy
+
+	Template.instance().isTerraformingState.set(false);				// reset terraforming - redundancy
+
+	Template.instance().selectedSoldier.set(null);					// remove selected
+
+	checkForBattleVictories(Template.instance().board.get());			// resolve battles
+
+	resetTeams(Template.instance());								// reset soldier movement count
+
+	Template.instance().actionsTaken.set(0);					// reset actions taken count
+
+	Template.instance().isAActive.set(!Template.instance().isAActive.get()); 	// flip the turn
+}
 
 function checkForBattleVictories(board){
 	let lostSoldiers = [];
@@ -300,33 +291,72 @@ function checkForBattleVictories(board){
 
 			if(tile.soldier != null){
 				let victim = tile.soldier;
-				let adjacentTiles = getAdjacentTiles(board,tile.x,tile.y);
+				let adjacentTiles = getTilesAdjacentToPoint(board,tile.x,tile.y, 1);
 
-				let adjacentEnemies = 0;
+				let attackerPower = 0;
+				let defenderPower = 0;
 
-				if(tile.depth > 0)	// if victim is on a hill
-					adjacentEnemies--;
+				if(victim.category !== 'mage' &&
+				    victim.category !== 'archer')
+					defenderPower++;	// mages and archers have no natural defense
+
+				if(tile.depth > 0)		// if victim is on a hill increase its defense
+					defenderPower++;
 
 				for(let j=0; j<adjacentTiles.length; j++){
 					let aTile = adjacentTiles[j];
 
 					if(aTile.soldier != null){
-						if(aTile.soldier.teamA !== victim.teamA){
-							adjacentEnemies++;
 
-							if(aTile.depth > 0)
-								adjacentEnemies++;
+						if(aTile.soldier.teamA !== victim.teamA){	// if enemy is near
 
-						}else{
-							adjacentEnemies--;
+							if(aTile.soldier.category !== 'archer' &&
+						  	    aTile.soldier.category !== 'mage'){	// these classes do not attack adjacent
 
-							if(aTile.depth > 0)
-								adjacentEnemies--;
+								attackerPower++;		// increase attack power
+
+								if(aTile.depth > 0)		// if enemy is on a hill
+									attackerPower++;	// increase attack power
+							}
+
+						}else{						// if adjacent friendly
+
+							if(aTile.soldier.category !== 'archer' &&
+						  	    aTile.soldier.category !== 'mage'){	// these calsses do not defend adjacent
+
+								defenderPower++;		// decrease attack power
+
+								if(aTile.depth > 0)		// if adjacent friendly is on a hill
+									defenderPower++;	// decrease attack power
+							}
 						}
 					}
 				}
 
-				if(adjacentEnemies > 1){
+				let archerTiles = getTilesAdjacentToPoint(board, tile.x, tile.y, 2);
+
+				for(let j=0; j<archerTiles.length; j++){		// archer tiles are spaces 2 away
+					let aTile = archerTiles[j];
+
+					if(aTile.soldier != null &&
+					   aTile.soldier.category === 'archer'){	// in the archer tiles, we are only looking for archers
+
+						if(aTile.soldier.teamA !== victim.teamA){	// if enemy is near
+
+							attackerPower++;			// increase attack power
+
+							if(aTile.depth > 0)			// if enemy is on a hill
+								attackerPower++;		// increase attack power
+
+						}
+					}
+				}
+						// if i decide that archers provide defense, add here
+
+
+
+
+				if(defenderPower - attackerPower < 0){
 					lostSoldiers.push(tile);
 				}
 			}
@@ -338,47 +368,6 @@ function checkForBattleVictories(board){
 
 		tile.flee();		// remove soldier from tile
 	}
-}
-
-function getAdjacentTiles(board,x,y){
-
-	let MAX_BOTTOM = 10;
-	let MAX_TOP = -1;
-	let MAX_RIGHT = 10;
-	let MAX_LEFT = -1;
-
-	let upx = x+1;
-	let downx = x - 1;
-	let righty = y + 1;
-	let lefty = y - 1;
-
-	let adjacentTiles = [];
-
-	if(upx < MAX_BOTTOM)
-		adjacentTiles.push(board[upx][y]);
-
-	if(upx < MAX_BOTTOM && righty < MAX_RIGHT)
-		adjacentTiles.push(board[upx][righty]);
-
-	if(upx < MAX_BOTTOM && lefty > MAX_LEFT)
-		adjacentTiles.push(board[upx][lefty]);
-
-	if(downx > MAX_TOP)
-		adjacentTiles.push(board[downx][y]);
-
-	if(downx > MAX_TOP && righty < MAX_RIGHT)
-		adjacentTiles.push(board[downx][righty]);
-
-	if(downx > MAX_TOP && lefty > MAX_LEFT)
-		adjacentTiles.push(board[downx][lefty]);
-
-	if(lefty > MAX_LEFT)
-		adjacentTiles.push(board[x][lefty]);
-
-	if(righty < MAX_RIGHT)
-		adjacentTiles.push(board[x][righty]);
-
-	return adjacentTiles;
 }
 
 function buildTile(x, y, type, depth){
@@ -418,7 +407,7 @@ function buildTile(x, y, type, depth){
 	}
 }
 
-function buildSoldier(id, team, x, y, movement, category){
+function buildSoldier(id, team, x, y, movement, category, maxActions){
 	return {
 		movement: movement,
 		x: x,
@@ -426,242 +415,35 @@ function buildSoldier(id, team, x, y, movement, category){
 		id: id,
 		teamA: team, // true = red, false = black
 		performedActionCount: 0,
-		maxActions: 2,
+		movementTaken: 0,
 		category: category,
+		maxActions: maxActions,
 		styleclass: function(){
 			if(this.category === 'soldier')
 				return 'soldier';
 			else if(this.category === 'mage')
 				return 'soldier mage';
+			else if(this.category === 'archer')
+				return 'soldier archer';
+			else if(this.category === 'knight')
+				return 'soldier knight';
 			else
 				return '';
 		},
 		move: function(x, y){
 			this.x = x;
 			this.y = y;
-			this.incrementAction(1);
 		},
 		resetActions: function(){
 			this.performedActionCount = 0;
+			this.movementTaken = 0;
 		},
 		incrementAction: function(actionsTaken){
 			this.performedActionCount = this.performedActionCount + actionsTaken;
+		},
+		incrementMovement: function(spacesMoved){
+			this.movementTaken = this.movementTaken + Math.ceil(spacesMoved);
+			console.log('movement taken is: ' + this.movementTaken + ' of ' + this.movement);
 		}
 	};
-}
-
-function resetTeams(template){
-	let soldiersRed = template.soldiersRed.get();
-
-	for(let i=0; i<soldiersRed.length; i++){
-		let soldier = soldiersRed[i];
-		soldier.resetActions();
-	}
-
-	template.soldiersRed.set(soldiersRed);
-
-	let soldiersBlue = template.soldiersBlue.get();
-
-	for(let i=0; i<soldiersBlue.length; i++){
-		let soldier = soldiersBlue[i];
-		soldier.resetActions();
-	}
-
-	template.soldiersBlue.set(soldiersBlue);
-}
-
-function editTerraformableSquares(me, moveable){
-	let soldier = me.selectedSoldier.get();
-
-	let tileReach = 3;
-
-	let MAX_BOTTOM = 10;
-	let MAX_TOP = -1;
-	let MAX_RIGHT = 10;
-	let MAX_LEFT = -1;
-
-	let x = soldier.x;
-	let y = soldier.y;
-
-	let ctrInit = 1;
-
-	// go down
-	let ctr = ctrInit;
-	while(ctr < tileReach && x+ctr < MAX_BOTTOM){
-		if(me.board.get()[x+ctr][y].soldier != null){
-			me.board.get()[x + ctr][y].isMoveable = false;
-		}else{
-			me.board.get()[x + ctr][y].isMoveable = moveable;
-		}
-		ctr++;
-	}
-
-	// go down right
-	ctr = 0;
-	while(ctr < tileReach && x+ctr < MAX_BOTTOM && y+ctr <MAX_RIGHT){
-		if(me.board.get()[x + ctr][y + ctr].soldier != null){
-			me.board.get()[x + ctr][y + ctr].isMoveable = false;
-		}else{
-			me.board.get()[x + ctr][y + ctr].isMoveable = moveable;
-		}
-		ctr++;
-	}
-
-	// go right
-	ctr = 0;
-	while(ctr < tileReach && y+ctr < MAX_RIGHT){
-		if(me.board.get()[x][y + ctr].soldier != null){
-			me.board.get()[x][y + ctr].isMoveable = false;
-		}else{
-			me.board.get()[x][y + ctr].isMoveable = moveable;
-		}
-		ctr++;
-	}
-
-	// go down left
-	ctr = 0;
-	while(ctr < tileReach && x+ctr < MAX_BOTTOM && y-ctr > MAX_LEFT){
-		if(me.board.get()[x + ctr][y - ctr].soldier != null){
-			me.board.get()[x + ctr][y - ctr].isMoveable = false;
-		}else{
-			me.board.get()[x + ctr][y - ctr].isMoveable = moveable;
-		}
-		ctr++;
-	}
-
-	// go left
-	ctr = 0;
-	while(ctr < tileReach && y-ctr > MAX_LEFT){
-		if(me.board.get()[x][y - ctr].soldier != null){
-			me.board.get()[x][y - ctr].isMoveable = false;
-		}else{
-			me.board.get()[x][y - ctr].isMoveable = moveable;
-		}
-		ctr++;
-	}
-
-	// go up left
-	ctr = 0;
-	while(ctr < tileReach && x-ctr > MAX_TOP && y-ctr > MAX_LEFT){
-		if(me.board.get()[x - ctr][y - ctr].soldier != null){
-			me.board.get()[x - ctr][y - ctr].isMoveable = false;
-		}else{
-			me.board.get()[x-ctr][y-ctr].isMoveable = moveable;
-		}
-		ctr++;
-	}
-
-	// go up
-	ctr = 0;
-	while(ctr < tileReach && x-ctr > MAX_TOP){
-		if(me.board.get()[x - ctr][y].soldier != null){
-			me.board.get()[x - ctr][y].isMoveable = false;
-		}else{
-			me.board.get()[x - ctr][y].isMoveable = moveable;
-		}
-		ctr++;
-	}
-
-	//go up right
-	ctr = 0;
-	while(ctr < tileReach && x-ctr > MAX_TOP && y+ctr < MAX_RIGHT){
-		if(me.board.get()[x - ctr][y + ctr].soldier != null){
-			me.board.get()[x - ctr][y + ctr].isMoveable = false;
-		}else{
-			me.board.get()[x - ctr][y + ctr].isMoveable = moveable;
-		}
-		ctr++;
-	}
-
-	// knight top right
-	ctr = 0;
-	while(ctr < 1 && x-ctr > MAX_TOP && y+ctr < MAX_RIGHT){
-
-		if(x-2 > MAX_TOP && y+1 < MAX_RIGHT){
-			if(me.board.get()[x - 2][y + 1].soldier != null){
-				me.board.get()[x - 2][y + 1].isMoveable = false;
-			}else{
-				me.board.get()[x - 2][y + 1].isMoveable = moveable;
-			}
-		}
-
-		if(x - 1 > MAX_TOP && y+2 < MAX_RIGHT){
-			if(me.board.get()[x - 1][y + 2].soldier != null){
-				me.board.get()[x - 1][y + 2].isMoveable = false;
-			}else{
-				me.board.get()[x - 1][y + 2].isMoveable = moveable;
-			}
-		}
-
-		ctr++;
-	}
-
-	// knight bottom right
-	ctr = 0;
-	while(ctr < 1 && x+ctr < MAX_BOTTOM && y+ctr <MAX_RIGHT){
-
-		if(x+2 < MAX_BOTTOM && y+1 < MAX_RIGHT){
-			if(me.board.get()[x + 2][y + 1].soldier != null){
-				me.board.get()[x + 2][y + 1].isMoveable = false;
-			}else{
-				me.board.get()[x + 2][y + 1].isMoveable = moveable;
-			}
-		}
-
-		if(x+1 < MAX_BOTTOM && y + 2 < MAX_RIGHT){
-			if(me.board.get()[x + 1][y + 2].soldier != null){
-				me.board.get()[x + 1][y + 2].isMoveable = false;
-			}else{
-				me.board.get()[x + 1][y + 2].isMoveable = moveable;
-			}
-		}
-
-		ctr++;
-	}
-
-	// knight bottom left
-	ctr = 0;
-	while(ctr < 1 && x+ctr < MAX_BOTTOM && y-ctr > MAX_LEFT){
-
-		if(x+2 < MAX_BOTTOM && y - 1 > MAX_LEFT){
-			if(me.board.get()[x + 2][y - 1].soldier != null){
-				me.board.get()[x + 2][y - 1].isMoveable = false;
-			}else{
-				me.board.get()[x + 2][y - 1].isMoveable = moveable;
-			}
-		}
-
-		if(x+1 < MAX_BOTTOM && y - 2 > MAX_LEFT){
-			if(me.board.get()[x + 1][y - 2].soldier != null){
-				me.board.get()[x + 1][y - 2].isMoveable = false;
-			}else{
-				me.board.get()[x + 1][y - 2].isMoveable = moveable;
-			}
-		}
-
-		ctr++;
-	}
-
-	// knight top left
-	ctr = 0;
-	while(ctr < 1 && x-ctr > MAX_TOP && y-ctr > MAX_LEFT){
-
-		if(x - 2 > MAX_TOP && y - 1 > MAX_LEFT){
-			if(me.board.get()[x - 2][y - 1].soldier != null){
-				me.board.get()[x - 2][y - 1].isMoveable = false;
-			}else{
-				me.board.get()[x - 2][y - 1].isMoveable = moveable;
-			}
-		}
-
-		if(x - 1 > MAX_TOP && y - 2 > MAX_LEFT){
-			if(me.board.get()[x - 1][y - 2].soldier != null){
-				me.board.get()[x - 1][y - 2].isMoveable = false;
-			}else{
-				me.board.get()[x - 1][y - 2].isMoveable = moveable;
-			}
-		}
-
-		ctr++;
-	}
 }

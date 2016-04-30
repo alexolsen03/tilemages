@@ -70,16 +70,28 @@ div{
 
 .soldier{
 	position: absolute;
-	top: 12px;
-	left: 12px;
+	top: 8px;
+	left: 8px;
 	border-radius: 50%;
-	width: 25px;
-	height: 25px;
-	background-color: #ddd;
+	width: 30px;
+	height: 30px;
+	background-color: white;
+	background-image: url('/images/sword.png');
+	background-position: 0 0;
+	background-repeat: round;
+	border: 1px solid black;
 }
 
 .soldier.mage{
-	border-radius: 0;
+	background-image: url('/images/pyramid.png');
+}
+
+.soldier.archer{
+	background-image: url('/images/bow.png');
+}
+
+.soldier.knight{
+	background-image: url('/images/horse.png');
 }
 
 .sign{
@@ -94,5 +106,5 @@ div{
 }
 
 .teamB{
-	background-color: black;
+	background-color: white;
 }
