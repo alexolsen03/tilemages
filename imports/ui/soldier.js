@@ -1,6 +1,7 @@
 import './soldier.html';
 import { clearSelectableTiles,
-	getTilesAdjacentToPoint
+	getTilesAdjacentToPoint,
+	calculateMoveableSquares
 } from '../../client/lib/helperFunctions.js';
 
 Template.soldier.helpers({
@@ -30,7 +31,7 @@ Template.soldier.events({
 				let movementAvailable = selectedSoldier.movement - selectedSoldier.movementTaken - getActionsTaken(template);
 
 				// show moveable
-				editMoveableTiles(this, true, selectedSoldier, movementAvailable);
+				editMoveableTiles(this, selectedSoldier, movementAvailable);
 
 				// set selected state
 				setSelectedOverall(template, selectedSoldier);
@@ -38,6 +39,12 @@ Template.soldier.events({
 		}
 	}
 });
+
+function editMoveableTiles(me, selectedSoldier, stepsAvailable){
+//	board, startY, startX,pathsFound,stepsTaken, MAX_STEPS
+
+	calculateMoveableSquares(me.board, selectedSoldier.x, selectedSoldier.y, [], 0, stepsAvailable);
+}
 
 function setSelectedOverall(template, soldier){
 	template.view.parentView.parentView.parentView.parentView.parentView.parentView.parentView.parentView.parentView._templateInstance.selectedSoldier.set(soldier);
@@ -72,8 +79,8 @@ function getTileObj(me, x, y){
 	return getBoard(me)[x][y];
 }
 
-/* */
-function editMoveableTiles(me, moveable, soldier, spaces){
+/* REMOVE AFTER PATHFINDING IMPLEMENTATION */
+/*function editMoveableTiles(me, moveable, soldier, spaces){
 
 	let moveableTiles = [];
 	for(let n=0; n < spaces; n++){
@@ -91,4 +98,4 @@ function editMoveableTiles(me, moveable, soldier, spaces){
 			getTileObj(me, moveableTile.x, moveableTile.y).isMoveable = moveable;
 		}
 	}
-}
+}*/

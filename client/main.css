@@ -21,6 +21,12 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 
+body{
+	height: 100%;
+	background: #eee;
+    background-image: linear-gradient(to bottom,#d7d7d7 0%,#eeeeee 116px);
+}
+
 div{
 	line-height: 0;
 	margin: 0px;
@@ -29,14 +35,26 @@ div{
 	font-size: 0;
 }
 
+.board{
+	margin-left: 100px;
+}
+
+.row .tile:first-child{
+	border-left: 1px solid #999;
+}
+
+.row:first-child .tile{
+	border-top: 1px solid #999;
+}
+
 .tile{
 	position: relative;
 	display: inline-block;
 	box-sizing: border-box;;
 	height: 50px;
 	width: 50px;
-	border-right: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #888;
+	border-bottom: 1px solid #888;
 
 }
 
@@ -44,16 +62,24 @@ div{
 	border: 5px solid yellow;
 }
 
-.terra-state, form{
+.terra-state, form, .taken-soldiers{
 	font-size: 12pt;
 }
 
+.taken-soldiers{
+	display: inline-block;
+	line-height: 1;
+	height: 50px;
+	width: 50px;
+	position: relative;
+}
+
 .land0{
-	background-color: #4dff88;
+	background-color: #71B16E;
 }
 
 .land1{
-	background-color: #00cc44;
+	background-color: #287324;
 }
 
 .land2{
@@ -75,7 +101,7 @@ div{
 	border-radius: 50%;
 	width: 30px;
 	height: 30px;
-	background-color: white;
+	background-color: green;
 	background-image: url('/images/sword.png');
 	background-position: 0 0;
 	background-repeat: round;

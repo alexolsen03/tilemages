@@ -26,16 +26,33 @@
 		</div>
 	{{/if}}
 
-	{{#each row in board}}
-		<div class='row'>
-			{{#each r in row}}
-				{{> tile board=board
-					x=r.x
-					y=r.y
-					soldier=r.soldier
-					selected=selectedSoldier
-				}}
-			{{/each}}
+	<div class=board>
+		{{#each row in board}}
+			<div class='row'>
+				{{#each r in row}}
+					{{> tile board=board
+						x=r.x
+						y=r.y
+						soldier=r.soldier
+						selected=selectedSoldier
+					}}
+				{{/each}}
+			</div>
+		{{/each}}
+	</div>
+
+	{{#each s in soldiersRedTaken}}
+		<div class='taken-soldiers'>
+			{{> soldier soldier=s }}
+		</div>
+	{{/each}}
+
+	<div>
+	</div>
+
+	{{#each s in soldiersBlueTaken}}
+		<div class='taken-soldiers'>
+			{{> soldier soldier=s }}
 		</div>
 	{{/each}}
 
