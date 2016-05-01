@@ -1,48 +1,82 @@
 import './soldier.html';
 import { clearSelectableTiles,
 	getTilesAdjacentToPoint,
-	calculateMoveableSquares
+	calculateMoveableSquares,
+	buildSoldier,
+	buildTile
 } from '../../client/lib/helperFunctions.js';
+
+Template.soldier.onCreated(function(){
+
+});
 
 Template.soldier.helpers({
 	teamClass: function(){
-		if(this.soldier == null)
+		if(this == null)
 			return '';
 		else
-			return this.soldier.teamA == true ? 'teamA' : 'teamB';
+			return this.teamA == true ? 'teamA' : 'teamB';
 	},
 	typeClass: function(){
-		return this.soldier.styleclass();
+		return styleclass(this);
 	}
 })
 
 Template.soldier.events({
 	'click .soldier': function(event, template){
+		console.log('clicked soldier bro');
 
-		let selectedSoldier = this.soldier;	// instance soldier
+		console.log(this);
+		console.log(template.view.parentView.parentView.parentView.parentView.parentView.parentView.parentView.parentView.parentView._templateInstance);
+		if(isMyTurn(template)){
 
-		if(selectedSoldier.teamA === getActiveTeam(template)){	// is the clicked soldier the right team
+			if(this.teamA === getActiveTeam(template)){	// is the clicked soldier the right team
+				console.log('yep');
 
-			if(selectedSoldier.performedActionCount < selectedSoldier.maxActions){
+				if(this.performedActionCount < this.maxActions){
+					console.log('yeep');
 
-				if(this.selected)		// a soldier is active, need to inactivate it
-					clearSelectableTiles(this.board);
+	/*				if(this.selected)		// a soldier is active, need to inactivate it
+						clearSelectableTiles(this.board);*/
 
-				let movementAvailable = selectedSoldier.movement - selectedSoldier.movementTaken - getActionsTaken(template);
+					// set selected state
+					setSelectedOverall(template, this);
 
-				// show moveable
-				editMoveableTiles(this, selectedSoldier, movementAvailable);
+	//				let movementAvailable = this.movement - this.movementTaken - getActionsTaken(template);
 
+					// show moveable
+	//				editMoveableTiles(this, this, movementAvailable);
+
+				}else{
+					console.log('noope');
+					console.log(this);
+					// set selected state
+					setSelectedOverall(template, null);
+				}
+			}else{
+
+				console.log('wrong team');
 				// set selected state
-				setSelectedOverall(template, selectedSoldier);
+				setSelectedOverall(template, null);
 			}
 		}
 	}
 });
 
-function editMoveableTiles(me, selectedSoldier, stepsAvailable){
-//	board, startY, startX,pathsFound,stepsTaken, MAX_STEPS
+function styleclass(me){
+	if(me.category === 'soldier')
+	    return 'soldier';
+	  else if(me.category === 'mage')
+	    return 'soldier mage';
+	  else if(me.category === 'archer')
+	    return 'soldier archer';
+	  else if(me.category === 'knight')
+	    return 'soldier knight';
+	  else
+	    return '';
+}
 
+function editMoveableTiles(me, selectedSoldier, stepsAvailable){
 	calculateMoveableSquares(me.board, selectedSoldier.x, selectedSoldier.y, [], 0, stepsAvailable);
 }
 
@@ -55,6 +89,7 @@ function getActionsTaken(template){
 }
 
 function getActiveTeam(template){
+
 	return template.view.parentView
 			.parentView
 			.parentView
@@ -64,7 +99,7 @@ function getActiveTeam(template){
 			.parentView
 			.parentView
 			.parentView
-			._templateInstance.isAActive.get();
+			._templateInstance.data.isAActive;
 }
 
 function getBoard(me){
@@ -77,6 +112,15 @@ function getTileObj(me){
 
 function getTileObj(me, x, y){
 	return getBoard(me)[x][y];
+}
+
+function isMyTurn(template){
+	let turn = template.view.parentView.parentView.parentView.parentView.parentView.parentView.parentView.parentView.parentView._templateInstance.data.currentTurn[0];
+
+	if(turn === Meteor.userId())
+		return true;
+	else
+		return false;
 }
 
 /* REMOVE AFTER PATHFINDING IMPLEMENTATION */

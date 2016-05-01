@@ -41,7 +41,33 @@ if(Meteor.isClient){
 
 Meteor.methods({
 	createGame: function(otherPlayerId){
-		var game = GameFactory.createGame([Meteor.userId(), otherPlayerId]);
+		let game = GameFactory.createGame([Meteor.userId(), otherPlayerId]);
 		Games.insert(game);
+	},
+	updateBoard: function(gameId, id, board){
+		let game = Games.findOne(gameId);
+
+		game.board = board;
+
+		Games.update(gameId, game);
+	},
+	takeTurn: function(gameId, id, board, isAActive){
+		let game = Games.findOne(gameId);
+
+		let prevActive = game.isAActive;
+
+		if(prevActive !== isAActive){ // turn flipped
+			let temp = game.currentTurn[0];
+			game.currentTurn[0] = game.currentTurn[1];
+			game.currentTurn[1] = temp;
+		}
+
+		game.board = board;
+		game.isAActive = isAActive;
+
+		console.log('end turn');
+		console.log(game.board);
+
+		Games.update(gameId, game);
 	}
 })
