@@ -42,6 +42,8 @@ if(Meteor.isClient){
 Meteor.methods({
 	createGame: function(otherPlayerId){
 		let game = GameFactory.createGame([Meteor.userId(), otherPlayerId]);
+		console.log('created game!');
+		console.log(game);
 		Games.insert(game);
 	},
 	updateBoard: function(gameId, id, board){
@@ -51,7 +53,7 @@ Meteor.methods({
 
 		Games.update(gameId, game);
 	},
-	takeTurn: function(gameId, id, board, isAActive){
+	takeTurn: function(gameId, id, board, isAActive, teamATaken, teamBTaken){
 		let game = Games.findOne(gameId);
 
 		let prevActive = game.isAActive;
@@ -62,11 +64,11 @@ Meteor.methods({
 			game.currentTurn[1] = temp;
 		}
 
+		game.teamATakenSoldiers = teamATaken;
+		game.teamBTakenSoldiers = teamBTaken;
+
 		game.board = board;
 		game.isAActive = isAActive;
-
-		console.log('end turn');
-		console.log(game.board);
 
 		Games.update(gameId, game);
 	}

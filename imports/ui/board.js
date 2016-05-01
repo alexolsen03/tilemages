@@ -107,6 +107,12 @@ Template.board.helpers({
 			return true;
 		else
 			return false;
+	},
+	myTeam: function(){
+		return Template.instance().data.players[Meteor.userId()].teamA;
+	},
+	otherPlayerName: function(){
+		return getOtherPlayer().name;
 	}
 });
 
@@ -123,7 +129,11 @@ Template.board.events({
 
 			let board = editMoveableTiles(template.data.board, Template.instance().selectedSoldier.get(), movementAvailable);
 
-			Meteor.call('takeTurn', Template.instance().data._id, Meteor.userId(), board, Template.instance().data.isAActive);
+			Meteor.call('takeTurn', Template.instance().data._id, Meteor.userId(),
+				board,
+				Template.instance().data.isAActive,
+				Template.instance().data.teamATakenSoldiers,
+				Template.instance().data.teamBTakenSoldiers);
 		}else{
 			console.log('NO SELECTED SOLDIERS!');
 		}
@@ -135,9 +145,16 @@ Template.board.events({
 		// remove the highlighted squares
 		clearSelectableTiles(template.data.board);
 
-		flee(template.data.board[template.previousSelectedSoldier.x][template.previousSelectedSoldier.y]);
+		// if clicking in terraformable squares
+		if(template.previousSelectedSoldier){
+			flee(template.data.board[template.previousSelectedSoldier.x][template.previousSelectedSoldier.y]);
+		}
 
-		Meteor.call('takeTurn', Template.instance().data._id, Meteor.userId(), template.data.board, Template.instance().data.isAActive);
+		Meteor.call('takeTurn', Template.instance().data._id, Meteor.userId(),
+			template.data.board,
+			Template.instance().data.isAActive,
+			Template.instance().data.teamATakenSoldiers,
+			Template.instance().data.teamBTakenSoldiers);
 
 	},
 
@@ -155,17 +172,17 @@ Template.board.events({
 	'click .terraform': function(event, template){
 
 		if(template.isTerraformingState.get()){
-			clearSelectableTiles(template.board.get());
+			clearSelectableTiles(Template.instance().data.board);
 			template.selectedSoldier.set(null);
 		}else{
-			editTerraformableSquares(template.board.get(),
+			editTerraformableSquares(Template.instance().data.board,
 						       template.selectedSoldier.get().x,
 						       template.selectedSoldier.get().y,
 						       true);
 		}
 
 		template.isTerraformingState.set(!template.isTerraformingState.get());
-		template.board.set(template.board.get());	// redraw
+//		template.board.set(template.board.get());	// redraw
 	},
 	'click .end-turn': function(event, template){
 
@@ -190,17 +207,16 @@ function endTurn(){
 	checkForBattleVictories(Template.instance().data.board);			// resolve battles
 
 	resetTeams(Template.instance());						// reset soldier movemnet count
-	console.log('enders game');
-	console.log(Template.instance().data.teamASoldiers);
 
 	Template.instance().actionsTaken.set(0);					// reset actions taken count
 
-	console.log('end turn..');
-	console.log(Template.instance());
-
 	Template.instance().data.isAActive = !Template.instance().data.isAActive; 	// flip the turn
 
-	Meteor.call('takeTurn', Template.instance().data._id, Meteor.userId(), Template.instance().data.board, Template.instance().data.isAActive);
+	Meteor.call('takeTurn', Template.instance().data._id, Meteor.userId(),
+		Template.instance().data.board,
+		Template.instance().data.isAActive,
+		Template.instance().data.teamATakenSoldiers,
+		Template.instance().data.teamBTakenSoldiers);
 }
 
 function checkForBattleVictories(board){
@@ -292,13 +308,13 @@ function checkForBattleVictories(board){
 		console.log('blah!' + tile.soldier.teamA);
 
 		if(tile.soldier.teamA){
-			let arr = Template.instance().data.teamASoldiers;
+			let arr = Template.instance().data.teamATakenSoldiers;
 			arr.push(tile.soldier);
-//			Template.instance().soldiersRedTaken = arr;
+			Template.instance().data.teamATakenSoldiers = arr;
 		}else{
-			let arr = Template.instance().data.teamBSoldiers;
+			let arr = Template.instance().data.teamBTakenSoldiers;
 			arr.push(tile.soldier);
-//			Template.instance().soldiersBlueTaken = arr;
+			Template.instance().data.teamBTakenSoldiers = arr;
 		}
 
 		flee(tile);		// remove soldier from tile
@@ -317,3 +333,17 @@ function editMoveableTiles(board, selectedSoldier, stepsAvailable){
 	return board;
 }
 
+function otherId(){
+	return Template.instance().data.players[0] === Meteor.userId() ? 1 : 0;
+}
+
+function getOtherPlayer(){
+	for (var key in Template.instance().data.players) {
+	  if (Template.instance().data.players.hasOwnProperty(key)) {
+	    if(key != Meteor.userId()){
+	    	console.log(key + ' does not equal ' + Meteor.userId())
+	    	return Template.instance().data.players[key];
+	    }
+	  }
+	}
+}

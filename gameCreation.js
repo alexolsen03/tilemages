@@ -34,8 +34,13 @@ function createPlayers(ids){
 
 	ids.forEach(function(id){
 		o[id] = {
+			name: Meteor.users.findOne(id).username
+		};
 
-		}
+		if(ids[0] === id)
+			o[id].teamA = false;
+		else
+			o[id].teamA = true;
 	});
 
 	return o;

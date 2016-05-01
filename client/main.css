@@ -125,8 +125,9 @@ div.row, div.tile{
 	border-radius: 50%;
 	width: 25px;
 	height: 25px;
-	margin-left: 520px;
+	margin-left: 20px;
 	border: 2px solid black;
+	display: inline-block;
 }
 
 .teamA{
@@ -134,5 +135,21 @@ div.row, div.tile{
 }
 
 .teamB{
+	background-color: white;
+}
+
+.player-info .team-a-player, .player-info .team-b-player{
+	display: inline-block;
+	width: 200px;
+	padding: 4px 10px;
+	font-size: 16pt;
+}
+
+.team-a-player{
+	background-color: red;
+}
+
+.team-b-player{
+
 	background-color: white;
 }

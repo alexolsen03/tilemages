@@ -1,12 +1,68 @@
 <template name='board'>
-	<h1>BOARD - {{ currentTurn }}</h1>
-	{{#if isAActive}}
+	<h1>Tile Mages</h1>
+
+	<div class='player-info'>
+		{{#if myTeam}}
+			<div class='team-a-player'>{{ currentUser.username }}</div>
+			{{#if myTurn}}
+				<div class='teamA sign'></div>
+			{{/if}}
+		{{else}}
+			<div class='team-b-player'>{{ currentUser.username }}</div>
+			{{#if myTurn}}
+				<div class='teamB sign'></div>
+			{{/if}}
+		{{/if}}
+	</div>
+	<div class='player-info'>
+		{{#unless myTeam}}
+			<div class='team-a-player'>{{ otherPlayerName }}</div>
+			{{#unless myTurn}}
+				<div class='teamA sign'></div>
+			{{/unless}}
+		{{else}}
+			<div class='team-b-player'>{{ otherPlayerName }}</div>
+			{{#unless myTurn}}
+				<div class='teamB sign'></div>
+			{{/unless}}
+		{{/unless}}
+	</div>
+
+
+<!-- 	{{#if isAActive}}
 		<div class='teamA sign'></div>
 	{{else}}
 		<div class='teamB sign'></div>
-	{{/if}}
+	{{/if}} -->
+	<br />
+	<br />
+	<br />
 
-	{{#if myTurn}}
+	<div class=board>
+		{{#each row in board}}
+			<div class='row'>
+				{{#each r in row}}
+					{{> tile r }}
+				{{/each}}
+			</div>
+		{{/each}}
+	</div>
+
+	{{#each teamATakenSoldiers}}
+		<div class='taken-soldiers'>
+			{{> soldier }}
+		</div>
+	{{/each}}
+
+	<br />
+
+	{{#each teamBTakenSoldiers}}
+		<div class='taken-soldiers'>
+			{{> soldier this }}
+		</div>
+	{{/each}}
+
+		{{#if myTurn}}
 		<button class='end-turn'>
 			End Turn - {{ actionsTaken }}
 		</button>
@@ -27,29 +83,5 @@
 			</form>
 		</div>
 	{{/if}}
-
-	<div class=board>
-		{{#each row in board}}
-			<div class='row'>
-				{{#each r in row}}
-					{{> tile r }}
-				{{/each}}
-			</div>
-		{{/each}}
-	</div>
-
-	{{#each s in teamATakenSoldiers}}
-		<div class='taken-soldiers'>
-			{{> soldier soldier=s }}
-		</div>
-	{{/each}}
-
-	<br />
-
-	{{#each s in teamBTakenSoldiers}}
-		<div class='taken-soldiers'>
-			{{> soldier soldier=s }}
-		</div>
-	{{/each}}
 
 </template>

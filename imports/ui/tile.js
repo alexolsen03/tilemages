@@ -29,18 +29,10 @@ Template.tile.events({
 	'click .tile.moveable': function(event, template){
 		const target = event.target;
 
-		console.log('selected overall: ');
-		console.log(getSelectedOverall(template));
-
 		if(getSelectedOverall(template) && !getIsTerraforming(template)){	// if there is a selected soldier and not terraforming
-			console.log(this);
 
 			if(!this.isOccupied){			// nobody on the tile already
 				let s = getSelectedOverall(template);
-
-				console.log('selectedOverall is: ' );
-				console.log(s);
-				console.log('setting the previousSelected to the above');
 
 				let bb = JSON.parse(JSON.stringify(s));
 
@@ -89,7 +81,7 @@ Template.tile.events({
 			let depth = type[type.length - 1];
 			let landType = type.substring(0, type.length -1);
 
-			this.terraform(landType, depth);
+			terraform(this,landType, depth);
 
 			getSelectedOverall(template).performedActions = getSelectedOverall(template).performedActions + 2;	// terraforming takes the soldiers actions
 
@@ -97,7 +89,7 @@ Template.tile.events({
 			incrementActionsTaken(template);
 			incrementActionsTaken(template);	// terraforming takes 2 actions
 
-			clearSelectableTiles(this.board);
+			clearSelectableTiles(getBoard(template));
 			setIsTerraforming(template, false);
 
 			// update the overall selected item
@@ -115,6 +107,11 @@ function styleclass(me){
 
 function terrastate(me){
 	return me.type + me.depth;
+}
+
+function terraform(me,type,depth){
+	me.type = type;
+	me.depth = depth;
 }
 
 function move(soldier, x, y){
