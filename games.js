@@ -71,5 +71,10 @@ Meteor.methods({
 		game.isAActive = isAActive;
 
 		Games.update(gameId, game);
+	},
+	endGame: function(gameId){
+		let game = Games.findOne(gameId);
+		game.inProgress = false;
+		Games.update(gameId, game);
 	}
 })

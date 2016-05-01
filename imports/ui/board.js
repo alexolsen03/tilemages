@@ -185,14 +185,13 @@ Template.board.events({
 //		template.board.set(template.board.get());	// redraw
 	},
 	'click .end-turn': function(event, template){
-
 		endTurn();
-
-		// resets board after other templates events have finished
-		// template.board.set(template.board.get());
 	},
 	'click .terra-state': function(event, template){
 		template.terraformingType.set(event.target.value);
+	},
+	'click .end-game': function(event, template){
+		Meteor.call('endGame', Template.instance().data._id);
 	}
 });
 

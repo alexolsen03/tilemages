@@ -1,6 +1,14 @@
 <template name='layout'>
-	<h1>LAYOUT</h1>
+	{{> header}}
 	<div id='main'>
 		{{> yield}}
+	</div>
+</template>
+
+<template name='header'>
+	<div class='header'>
+		<div class='inner-header'>
+			<h1>Tile Mages</h1>
+		</div>
 	</div>
 </template>

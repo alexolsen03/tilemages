@@ -1,87 +1,84 @@
 <template name='board'>
-	<h1>Tile Mages</h1>
-
-	<div class='player-info'>
-		{{#if myTeam}}
-			<div class='team-a-player'>{{ currentUser.username }}</div>
-			{{#if myTurn}}
-				<div class='teamA sign'></div>
+	<div class='board-wrapper'>
+		<div class='player-info'>
+			{{#if myTeam}}
+				<div class='team-a-player'>{{ currentUser.username }}</div>
+				{{#if myTurn}}
+					<div class='teamA sign'></div>
+				{{/if}}
+			{{else}}
+				<div class='team-b-player'>{{ currentUser.username }}</div>
+				{{#if myTurn}}
+					<div class='teamB sign'></div>
+				{{/if}}
 			{{/if}}
-		{{else}}
-			<div class='team-b-player'>{{ currentUser.username }}</div>
-			{{#if myTurn}}
-				<div class='teamB sign'></div>
-			{{/if}}
-		{{/if}}
-	</div>
-	<div class='player-info'>
-		{{#unless myTeam}}
-			<div class='team-a-player'>{{ otherPlayerName }}</div>
-			{{#unless myTurn}}
-				<div class='teamA sign'></div>
+		</div>
+		<div class='player-info'>
+			{{#unless myTeam}}
+				<div class='team-a-player'>{{ otherPlayerName }}</div>
+				{{#unless myTurn}}
+					<div class='teamA sign'></div>
+				{{/unless}}
+			{{else}}
+				<div class='team-b-player'>{{ otherPlayerName }}</div>
+				{{#unless myTurn}}
+					<div class='teamB sign'></div>
+				{{/unless}}
 			{{/unless}}
-		{{else}}
-			<div class='team-b-player'>{{ otherPlayerName }}</div>
-			{{#unless myTurn}}
-				<div class='teamB sign'></div>
-			{{/unless}}
-		{{/unless}}
-	</div>
+		</div>
 
+		<br />
+		<br />
 
-<!-- 	{{#if isAActive}}
-		<div class='teamA sign'></div>
-	{{else}}
-		<div class='teamB sign'></div>
-	{{/if}} -->
-	<br />
-	<br />
-	<br />
+		<div class=board>
+			{{#each row in board}}
+				<div class='row'>
+					{{#each r in row}}
+						{{> tile r }}
+					{{/each}}
+				</div>
+			{{/each}}
+		</div>
 
-	<div class=board>
-		{{#each row in board}}
-			<div class='row'>
-				{{#each r in row}}
-					{{> tile r }}
-				{{/each}}
+		{{#each teamATakenSoldiers}}
+			<div class='taken-soldiers'>
+				{{> soldier }}
 			</div>
 		{{/each}}
+
+		<br />
+
+		{{#each teamBTakenSoldiers}}
+			<div class='taken-soldiers'>
+				{{> soldier this }}
+			</div>
+		{{/each}}
+
+			{{#if myTurn}}
+			<button class='end-turn'>
+				End Turn - {{ actionsTaken }}
+			</button>
+		{{/if}}
+
+		{{#if ableToTerraform}}
+			<button class='terraform'>
+				Terraform tiles
+			</button>
+		{{/if}}
+
+		{{#if isTerraformingState}}
+			<div>
+				<form>
+					  <input type="radio" name="terra" class="terra-state" value="land0" checked/>Land <br>
+					  <input type="radio" name="terra" class="terra-state" value="land1"/> Hill<br>
+					  <input type="radio" name="terra" class="terra-state" value="water0"> Water
+				</form>
+			</div>
+		{{/if}}
+
+		<button class='end-game'>
+			Resign
+		</button>
 	</div>
-
-	{{#each teamATakenSoldiers}}
-		<div class='taken-soldiers'>
-			{{> soldier }}
-		</div>
-	{{/each}}
-
-	<br />
-
-	{{#each teamBTakenSoldiers}}
-		<div class='taken-soldiers'>
-			{{> soldier this }}
-		</div>
-	{{/each}}
-
-		{{#if myTurn}}
-		<button class='end-turn'>
-			End Turn - {{ actionsTaken }}
-		</button>
-	{{/if}}
-
-	{{#if ableToTerraform}}
-		<button class='terraform'>
-			Terraform tiles
-		</button>
-	{{/if}}
-
-	{{#if isTerraformingState}}
-		<div>
-			<form>
-				  <input type="radio" name="terra" class="terra-state" value="land0" checked/>Land <br>
-				  <input type="radio" name="terra" class="terra-state" value="land1"/> Hill<br>
-				  <input type="radio" name="terra" class="terra-state" value="water0"> Water
-			</form>
-		</div>
-	{{/if}}
 
 </template>
