@@ -136,23 +136,46 @@ function getTilesAdjacentToPoint(board, x, y, spaces){
 }
 
 function resetTeams(template){
-  let soldiersRed = template.soldiersRed.get();
+  console.log(template);
+  let soldiersRed = template.data.teamASoldiers;
 
   for(let i=0; i<soldiersRed.length; i++){
     let soldier = soldiersRed[i];
-    soldier.resetActions();
+    resetSoldierActions(soldier);
   }
 
-  template.soldiersRed.set(soldiersRed);
+  template.data.teamASoldiers = soldiersRed;
 
-  let soldiersBlue = template.soldiersBlue.get();
+  console.log('end dealA');
+  console.log(template.data.teamASoldiers);
+  console.log(soldiersRed);
+
+  let soldiersBlue = template.data.teamBSoldiers;
 
   for(let i=0; i<soldiersBlue.length; i++){
     let soldier = soldiersBlue[i];
-    soldier.resetActions();
+    resetSoldierActions(soldier);
   }
 
-  template.soldiersBlue.set(soldiersBlue);
+  console.log('end deal');
+  console.log(template.data.teamBSoldiers);
+  console.log(soldiersBlue);
+  template.data.teamBSoldiers = soldiersBlue;
+
+// reset board soldiers
+  template.data.board.forEach(function(row){
+    row.forEach(function(tile){
+      if(tile.soldier != null)
+        resetSoldierActions(tile.soldier);
+    });
+  });
+
+
+}
+
+function resetSoldierActions(soldier){
+  soldier.performedActionCount = 0;
+  soldier.movementTaken = 0;
 }
 
 function editTerraformableSquares(board, startX, startY, terraformable){
@@ -173,10 +196,90 @@ function editTerraformableSquares(board, startX, startY, terraformable){
   });
 }
 
+function buildTile(x, y, type, depth){
+  return {
+    x: x,
+    y: y,
+    type: type,
+    depth: depth,
+    isOccupied: false,
+    isMoveable: false,
+    tester: type+depth,
+    styleclass: function(){
+      if(this.isMoveable)
+        return this.terrastate() + ' tile moveable';
+      else
+        return this.terrastate() + ' tile';
+    },
+    aquaify: function(){
+      this.depth = 0;
+      this.type = 'water';
+    },
+    occupy: function(soldier){
+      this.isOccupied = true;
+      this.soldier = soldier;
+    },
+    flee: function(){
+      this.isOccupied = false;
+      this.soldier = null;
+    },
+    terraform: function(type,depth){
+      this.type = type;
+      this.depth = depth;
+    },
+    terrastate: function(){
+      return this.type + this.depth;
+    }
+  }
+}
+
+function buildSoldier(id, team, x, y, movement, category, maxActions){
+  return {
+    movement: movement,
+    x: x,
+    y: y,
+    id: id,
+    teamA: team, // true = red, false = black
+    performedActionCount: 0,
+    movementTaken: 0,
+    category: category,
+    maxActions: maxActions,
+    styleclass: function(){
+      if(this.category === 'soldier')
+        return 'soldier';
+      else if(this.category === 'mage')
+        return 'soldier mage';
+      else if(this.category === 'archer')
+        return 'soldier archer';
+      else if(this.category === 'knight')
+        return 'soldier knight';
+      else
+        return '';
+    },
+    move: function(x, y){
+      this.x = x;
+      this.y = y;
+    },
+    resetActions: function(){
+      this.performedActionCount = 0;
+      this.movementTaken = 0;
+    },
+    incrementAction: function(actionsTaken){
+      this.performedActionCount = this.performedActionCount + actionsTaken;
+    },
+    incrementMovement: function(spacesMoved){
+      this.movementTaken = this.movementTaken + Math.ceil(spacesMoved);
+      console.log('movement taken is: ' + this.movementTaken + ' of ' + this.movement);
+    }
+  };
+}
+
 export {
   clearSelectableTiles,
   getTilesAdjacentToPoint,
   resetTeams,
   editTerraformableSquares,
-  calculateMoveableSquares
+  calculateMoveableSquares,
+  buildSoldier,
+  buildTile
 }

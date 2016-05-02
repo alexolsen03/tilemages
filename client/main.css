@@ -27,7 +27,22 @@ body{
     background-image: linear-gradient(to bottom,#d7d7d7 0%,#eeeeee 116px);
 }
 
-div{
+.header{
+	background-color: #555;
+	color: #eee;
+}
+
+.inner-header{
+	width: 1000px;
+	margin: 0px auto;
+	padding: 8px 0px;
+}
+
+.inner-header h1{
+	font: 16pt 'Noto Sans','Lucida Grande','Lucida Sans Unicode',Geneva,Verdana,Sans-Serif;
+}
+
+div.row, div.tile{
 	line-height: 0;
 	margin: 0px;
 	outline: none;
@@ -35,7 +50,8 @@ div{
 	font-size: 0;
 }
 
-.board{
+.board-wrapper{
+	margin-top: 20px;
 	margin-left: 100px;
 }
 
@@ -50,16 +66,17 @@ div{
 .tile{
 	position: relative;
 	display: inline-block;
-	box-sizing: border-box;;
+	box-sizing: border-box;
 	height: 50px;
 	width: 50px;
 	border-right: 1px solid #888;
 	border-bottom: 1px solid #888;
-
+	border-top: 1px solid transparent;
+	border-left: 1px solid transparent;
 }
 
 .tile.moveable{
-	border: 5px solid yellow;
+	border: 1px solid yellow;
 }
 
 .terra-state, form, .taken-soldiers{
@@ -105,7 +122,7 @@ div{
 	background-image: url('/images/sword.png');
 	background-position: 0 0;
 	background-repeat: round;
-	border: 1px solid black;
+	border: 2px solid black;
 }
 
 .soldier.mage{
@@ -122,15 +139,34 @@ div{
 
 .sign{
 	border-radius: 50%;
-	width: 25px;
-	height: 25px;
-	margin-left: 520px;
+	width: 15px;
+	height: 15px;
+	margin-left: 20px;
+	border: 2px solid black;
+	display: inline-block;
 }
 
 .teamA{
-	background-color: red;
+	background-color: #C23A4C;
 }
 
 .teamB{
+	background-color: white;
+}
+
+.player-info .team-a-player, .player-info .team-b-player{
+	display: inline-block;
+	width: 150px;
+	padding: 4px 10px;
+	font-size: 12pt;
+}
+
+.team-a-player{
+	background-color: #C23A4C;
+	color: white;
+}
+
+.team-b-player{
+
 	background-color: white;
 }
