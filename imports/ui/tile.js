@@ -7,7 +7,6 @@ import { clearSelectableTiles,
 } from '../../client/lib/helperFunctions.js';
 
 Template.tile.onCreated(function(){
-	console.log(this);
 	let soldier = new ReactiveVar(this.data.soldier);
 });
 
