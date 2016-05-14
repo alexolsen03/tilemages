@@ -44,6 +44,8 @@ Template.board.onCreated(function(){
 				let team = player.team;
 				let color = team === 'a' ? 'r' : 'w';
 
+				console.log(tileMages.turn, color);
+
 				if(color !== tileMages.turn)
 				    	return;
 
@@ -125,9 +127,13 @@ Template.board.onRendered(function(){
 		let team = player.team;
 		let color = team === 'a' ? 'r' : 'w';
 
+		console.log(tileMages.turn, color);
+
 		if(color !== tileMages.turn)
 		    	return;
 
+		    console.log('generating terraform options');
+		    console.log(tileMages.generateTerraformOptions());
 		return tileMages.generateTerraformOptions();
 	}
 
