@@ -32,6 +32,13 @@ if(Meteor.isServer) {
 	Meteor.publish('users', function(){
 		return Meteor.users.find();
 	});
+
+	Meteor.publish('game', function(id){
+//		check(id);
+		console.log('publishing game!');
+		console.log(Games.find({ _id: id}));
+		return Games.find({ _id: id});
+	});
 }
 
 if(Meteor.isClient){
@@ -46,29 +53,29 @@ Meteor.methods({
 		console.log(game);
 		Games.insert(game);
 	},
-	updateBoard: function(gameId, id, board){
+	updateBoard: function(gameId, id, fen, boardFen){
 		let game = Games.findOne(gameId);
 
-		game.board = board;
+		game.fen = fen;
+		game.boardFen = boardFen;
 
 		Games.update(gameId, game);
 	},
-	takeTurn: function(gameId, id, board, isAActive, teamATaken, teamBTaken){
+	takeTurn: function(gameId, id, fen, boardFen){
 		let game = Games.findOne(gameId);
 
-		let prevActive = game.isAActive;
+		game.fen = fen;
+		game.boardFen = boardFen;
 
-		if(prevActive !== isAActive){ // turn flipped
+		let turn = fen.split(' ')[1];
+
+
+		if(turn !== game.currentTurn[0]){ // turn flipped
+			console.log('flipping turn');
 			let temp = game.currentTurn[0];
 			game.currentTurn[0] = game.currentTurn[1];
 			game.currentTurn[1] = temp;
 		}
-
-		game.teamATakenSoldiers = teamATaken;
-		game.teamBTakenSoldiers = teamBTaken;
-
-		game.board = board;
-		game.isAActive = isAActive;
 
 		Games.update(gameId, game);
 	},
