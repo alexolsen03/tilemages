@@ -3,10 +3,10 @@ GameFactory = {};
 GameFactory.createGame = function(playerIds){
 	let players = createPlayers(playerIds);
 
-	playerIds[0].teamA = false;	// first player is white
-	playerIds[1].teamA = true;	// second player is red
+	playerIds[0].teamA = true;	// first player is red
+	playerIds[1].teamA = false;	// second player is white
 
-	const DEFAULT_POSITION = 'SKMASSAMKS/10/10/10/10/10/10/10/10/skmassamks r';
+	const DEFAULT_POSITION = 'SKMASSAMKS/10/10/10/10/10/10/10/10/skmassamks r 0';
 	const DEFAULT_TERRA_STATE = '10/10/10/10/10/10/10/10/10/10';
 
 	return {

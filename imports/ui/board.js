@@ -5,18 +5,20 @@ Template.board.onCreated(function(){
 //	Meteor.subscribe('game', Router.current().params._id);
 	this.autorun(() => {
 		console.log('autorunning!');
-		console.log(Router.current().params._id);
 		Template.currentData(); // Reactive dependency
 		if(Template.instance().gameFen){
-			Template.instance().gameFen.set(Games.findOne(Router.current().params._id).fen)
+			let game = Games.findOne(Router.current().params._id);
 
+			Template.instance().gameFen.set(game.fen);
+			Template.instance().gameBoardFen.set(game.boardFen);
 
 			let gameId = Template.instance().data._id;
 			let userId = Meteor.userId();
 			let playerData = Template.instance().data.players;
-			let gameFen = Games.findOne(gameId).fen;
+			let gameFen = game.fen;
+			let boardFen = game.boardFen;
 
-			let tileMages = new TileMages.TileMages(Template.instance().gameFen.get());
+			let tileMages = new TileMages.TileMages(gameFen, boardFen);
 
 			let onDragStart = function(source, piece){
 				let game = Games.findOne(gameId);
@@ -37,10 +39,26 @@ Template.board.onCreated(function(){
 			}
 
 			let onTerraform = function(){
+				let game = Games.findOne(gameId);
+				let player = game.players[Meteor.userId()];
+				let team = player.team;
+				let color = team === 'a' ? 'r' : 'w';
+
+				if(color !== tileMages.turn)
+				    	return;
+
 				return tileMages.generateTerraformOptions();
 			}
 
 			let terraform = function(type, square){
+				let game = Games.findOne(gameId);
+				let player = game.players[Meteor.userId()];
+				let team = player.team;
+				let color = team === 'a' ? 'r' : 'w';
+
+				if(color !== tileMages.turn)
+				    	return;
+
 				return tileMages.terraform(type, square);	// returns lost soldiers
 			}
 
@@ -55,6 +73,7 @@ Template.board.onCreated(function(){
 				onDragStart: onDragStart,
 				onDrop: onDrop,
 				position: gameFen,
+				boardPosition: boardFen,
 				dropOffBoard: 'snapback',
 				onTerraform: onTerraform,
 				terraform: terraform,
@@ -67,7 +86,10 @@ Template.board.onCreated(function(){
 		this.subscribe('game', Router.current().params._id);
 	});
 
-	this.gameFen = new ReactiveVar(Games.findOne(Router.current().params._id).fen);
+	let game = Games.findOne(Router.current().params._id);
+
+	this.gameFen = new ReactiveVar(game.fen);
+	this.gameBoardFen = new ReactiveVar(game.boardFen);
 });
 
 Template.board.onRendered(function(){
@@ -75,8 +97,9 @@ Template.board.onRendered(function(){
 	let userId = Meteor.userId();
 	let playerData = Template.instance().data.players;
 	let gameFen = Games.findOne(gameId).fen;
+	let boardFen = Games.findOne(gameId).boardFen;
 
-	let tileMages = new TileMages.TileMages(Template.instance().gameFen.get());
+	let tileMages = new TileMages.TileMages(gameFen, boardFen);
 
 	let onDragStart = function(source, piece){
 		let game = Games.findOne(gameId);
@@ -97,10 +120,26 @@ Template.board.onRendered(function(){
 	}
 
 	let onTerraform = function(){
+		let game = Games.findOne(gameId);
+		let player = game.players[Meteor.userId()];
+		let team = player.team;
+		let color = team === 'a' ? 'r' : 'w';
+
+		if(color !== tileMages.turn)
+		    	return;
+
 		return tileMages.generateTerraformOptions();
 	}
 
 	let terraform = function(type, square){
+		let game = Games.findOne(gameId);
+		let player = game.players[Meteor.userId()];
+		let team = player.team;
+		let color = team === 'a' ? 'r' : 'w';
+
+		if(color !== tileMages.turn)
+		    	return;
+
 		return tileMages.terraform(type, square);	// returns lost soldiers
 	}
 
@@ -115,6 +154,7 @@ Template.board.onRendered(function(){
 		onDragStart: onDragStart,
 		onDrop: onDrop,
 		position: gameFen,
+		boardPosition: boardFen,
 		dropOffBoard: 'snapback',
 		onTerraform: onTerraform,
 		terraform: terraform,
