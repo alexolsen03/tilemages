@@ -1,38 +1,41 @@
 <template name='signup'>
-	<form>
+	<form class='sign-up-form'>
 		<h1>Sign up</h1>
-		<input type='text' id='su-email' placeholder="Email Address" />
-		<input type='text' id='su-username' placeholder="Username" />
-		<input type='password' id='su-password' placeholder="Password" />
-		<button> Sign Up </button>
+		<input type='text' id='su-email' placeholder="Email Address" /> <br />
+		<input type='text' id='su-username' placeholder="Username" /> <br />
+		<input type='password' id='su-password' placeholder="Password" /> <br /> <br />
+		<button class='btn'> Sign Up </button>
 	</form>
 </template>
 
 <template name='login'>
-	<form>
+	<form class='login-form'>
 		<h1>Log In</h1>
 		<input type='text' id='li-username' placeholder="Username" />
 		<input type='password' id='li-password' placeholder="Password" />
-		<button> Log In </button>
+		<button class='btn'> Log In </button>
 	</form>
 </template>
 
 <template name='logout'>
-	<form>
-		({{ currentUser.username }})
-		<button> Log Out </button>
-	</form>
+	<div class='align-r'>
+		<form>
+			<span class='username'>{{ currentUser.username }}</span>
+			<span class='logout-btn'>(logout)</span>
+		</form>
+	</div>
 </template>
 
 <template name='signupLogin'>
 	{{#if loggingIn}}
 		Logging in . . .
 	{{else}}
-		{{#if currentUser }}
-			{{> logout}}
-		{{else}}
+		{{#unless currentUser}}
 			{{> signup}}
+			<br />
+			<hr />
+			<br />
 			{{> login}}
-		{{/if}}
+		{{/unless}}
 	{{/if}}
 </template>

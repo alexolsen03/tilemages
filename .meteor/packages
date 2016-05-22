@@ -22,3 +22,4 @@ session
 iron:router
 accounts-password
 momentjs:moment
+modules

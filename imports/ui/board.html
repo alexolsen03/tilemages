@@ -1,84 +1,24 @@
 <template name='board'>
-	<div class='board-wrapper'>
-		<div class='player-info'>
-			{{#if myTeam}}
-				<div class='team-a-player'>{{ currentUser.username }}</div>
-				{{#if myTurn}}
-					<div class='teamA sign'></div>
-				{{/if}}
-			{{else}}
-				<div class='team-b-player'>{{ currentUser.username }}</div>
-				{{#if myTurn}}
-					<div class='teamB sign'></div>
-				{{/if}}
-			{{/if}}
-		</div>
-		<div class='player-info'>
-			{{#unless myTeam}}
-				<div class='team-a-player'>{{ otherPlayerName }}</div>
-				{{#unless myTurn}}
-					<div class='teamA sign'></div>
-				{{/unless}}
-			{{else}}
-				<div class='team-b-player'>{{ otherPlayerName }}</div>
-				{{#unless myTurn}}
-					<div class='teamB sign'></div>
-				{{/unless}}
-			{{/unless}}
-		</div>
-
-		<br />
-		<br />
-
-		<div class=board>
-			{{#each row in board}}
-				<div class='row'>
-					{{#each r in row}}
-						{{> tile r }}
-					{{/each}}
-				</div>
-			{{/each}}
-		</div>
-
-		{{#each teamATakenSoldiers}}
-			<div class='taken-soldiers'>
-				{{> soldier }}
-			</div>
-		{{/each}}
-
-		<br />
-
-		{{#each teamBTakenSoldiers}}
-			<div class='taken-soldiers'>
-				{{> soldier this }}
-			</div>
-		{{/each}}
-
-			{{#if myTurn}}
-			<button class='end-turn'>
-				End Turn - {{ actionsTaken }}
-			</button>
+	<div class='player-info my-info'>
+		{{ me.name }} (You)
+		{{#if turn}}
+			<div class='turn-marker {{ turnColor }}'></div>
 		{{/if}}
-
-		{{#if ableToTerraform}}
-			<button class='terraform'>
-				Terraform tiles
-			</button>
-		{{/if}}
-
-		{{#if isTerraformingState}}
-			<div>
-				<form>
-					  <input type="radio" name="terra" class="terra-state" value="land0" checked/>Land <br>
-					  <input type="radio" name="terra" class="terra-state" value="land1"/> Hill<br>
-					  <input type="radio" name="terra" class="terra-state" value="water0"> Water
-				</form>
-			</div>
-		{{/if}}
-
-		<button class='end-game'>
-			Resign
-		</button>
 	</div>
-
+	<br />
+	<div class='player-info opponent-info'>
+		{{ opponent.name }}
+		{{#unless turn}}
+			<div class='turn-marker {{ turnColor }}'></div>
+		{{/unless}}
+	</div>
+	<div id="abc" style="width: 524px;">
+	</div>
+	<div id="terracontrols">
+	</div>
+	{{#if gameOver}}
+		<div>
+			Game over. {{ gameOverMsg }}
+		</div>
+	{{/if}}
 </template>
