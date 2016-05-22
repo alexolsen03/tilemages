@@ -29,11 +29,13 @@ function createPlayers(ids){
 		};
 
 		if(ids[0] === id){
-			o[id].teamA = false;
-			o[id].team = 'b';
-		}else{
 			o[id].teamA = true;
 			o[id].team = 'a';
+			o[id].color = 'r';
+		}else{
+			o[id].teamA = false;
+			o[id].team = 'b';
+			o[id].color = 'w';
 		}
 	});
 

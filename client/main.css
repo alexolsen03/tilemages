@@ -154,7 +154,7 @@ div.row, div.tile{
 	background-color: white;
 }
 
-.player-info .team-a-player, .player-info .team-b-player{
+.player-info{
 	display: inline-block;
 	width: 150px;
 	padding: 4px 10px;
@@ -168,5 +168,20 @@ div.row, div.tile{
 
 .team-b-player{
 
+	background-color: white;
+}
+
+.turn-marker{
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	background-color: black;
+}
+
+.turn-marker.team-a{
+	background-color: #C23A4C;
+}
+
+.turn-marker.team-b{
 	background-color: white;
 }

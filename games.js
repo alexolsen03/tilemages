@@ -70,7 +70,7 @@ Meteor.methods({
 		let turn = fen.split(' ')[1];
 
 
-		if(turn !== game.currentTurn[0]){ // turn flipped
+		if(turn !== game.players[game.currentTurn[0]].color){ // turn flipped
 			console.log('flipping turn');
 			let temp = game.currentTurn[0];
 			game.currentTurn[0] = game.currentTurn[1];

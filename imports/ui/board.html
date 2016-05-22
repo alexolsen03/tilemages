@@ -1,8 +1,24 @@
 <template name='board'>
-	{{ gameFen }}
+	<div class='player-info my-info'>
+		{{ me.name }} (You)
+		{{#if turn}}
+			<div class='turn-marker {{ turnColor }}'></div>
+		{{/if}}
+	</div>
+	<br />
+	<div class='player-info opponent-info'>
+		{{ opponent.name }}
+		{{#unless turn}}
+			<div class='turn-marker {{ turnColor }}'></div>
+		{{/unless}}
+	</div>
 	<div id="abc" style="width: 524px;">
 	</div>
 	<div id="terracontrols">
 	</div>
-	{{ myBoard }}
+	{{#if gameOver}}
+		<div>
+			Game over. {{ gameOverMsg }}
+		</div>
+	{{/if}}
 </template>
