@@ -21,15 +21,12 @@ Template.userList.helpers({
 			cantPlayAgainst.push(otherId(game));
 		});
 
-
-
 		return Meteor.users.find({ _id: { $not: { $in: cantPlayAgainst } } });
 	}
 });
 
 Template.userItem.events({
-	'click button': function(event, template){
-		console.log(template.data._id);
+	'click .user-item': function(event, template){
 		Meteor.call('createGame', template.data._id);
 	}
 })

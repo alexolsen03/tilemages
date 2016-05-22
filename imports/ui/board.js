@@ -40,6 +40,7 @@ Template.board.onRendered(function(){
 			let gameStatus = gameFen.split(' ')[3];
 			Template.instance().gameOver.set(gameStatus);
 			gameOver = true;
+			Meteor.call('endGame', gameId);
 		}
 
 		let tileMages = new TileMages.TileMages(gameFen, boardFen);

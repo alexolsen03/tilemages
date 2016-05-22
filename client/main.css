@@ -24,7 +24,28 @@ time, mark, audio, video {
 body{
 	height: 100%;
 	background: #eee;
-    background-image: linear-gradient(to bottom,#d7d7d7 0%,#eeeeee 116px);
+             background-image: -webkit-linear-gradient(#d7d7d7 0%, #eeeeee 116px);
+             background-image: -o-linear-gradient(#d7d7d7 0%, #eeeeee 116px);
+             background-image: linear-gradient(#d7d7d7 0%, #eeeeee 116px);
+}
+
+button {
+    background: none;
+    border: 0;
+    color: inherit;
+    /* cursor: default; */
+    font: inherit;
+    line-height: normal;
+    overflow: visible;
+    padding: 0;
+    -webkit-appearance: button; /* for input */
+    -webkit-user-select: none; /* for button */
+       -moz-user-select: none;
+        -ms-user-select: none;
+}
+
+ul{
+	list-style-type: none;
 }
 
 .header{
@@ -32,7 +53,7 @@ body{
 	color: #eee;
 }
 
-.inner-header{
+.inner-header, .inner-body{
 	width: 1000px;
 	margin: 0px auto;
 	padding: 8px 0px;
@@ -40,6 +61,12 @@ body{
 
 .inner-header h1{
 	font: 16pt 'Noto Sans','Lucida Grande','Lucida Sans Unicode',Geneva,Verdana,Sans-Serif;
+	display: inline-block;
+}
+
+.inner-header .logged-in-user{
+	float: right;
+	display: inline-block;
 }
 
 div.row, div.tile{
@@ -184,4 +211,103 @@ div.row, div.tile{
 
 .turn-marker.team-b{
 	background-color: white;
+}
+
+.game-list, .user-list{
+	float: left;
+}
+
+.game-list{
+	width: 70%;
+}
+
+.user-list{
+	width: 25%;
+}
+
+.game-list h1, .user-list h1{
+	text-transform: uppercase;
+	color: #333;
+	font-family: 'Noto Sans','Lucida Grande','Lucida Sans Unicode',Geneva,Verdana,Sans-Serif;
+	padding: 4px 0px;
+}
+
+.game-opponent{
+	display: inline-block;
+	font-weight: bold;
+	color: #333;
+	width: 150px;
+}
+
+.user-list .user-item{
+	font-weight: bold;
+	text-decoration: underline;
+	color: #333;
+	padding: 4px 0px;
+}
+
+.username{
+	font-size: 14pt;
+	font-weight: bold;
+	color: #C23A4C;
+}
+
+.logout-btn{
+	cursor: pointer;
+	font-size: 10px;
+	color: #aaa;
+}
+
+.sign-up-form h1, .login-form h1{
+	text-transform: uppercase;
+	color: #333;
+	font-family: 'Noto Sans','Lucida Grande','Lucida Sans Unicode',Geneva,Verdana,Sans-Serif;
+	padding: 4px 0px;
+}
+
+.sign-up-form input, .login-form input{
+	margin: 8px 0px;
+	width: 200px;
+	padding: 2px 4px;
+	font-size: 12pt;
+}
+
+.login-form button{
+	margin-left: 6px;
+}
+
+.clearme{
+	clear: both;
+}
+
+.align-r{
+	text-align: right;
+}
+
+.btn {
+  background: #C23A4C;
+  background-image: -webkit-linear-gradient(top, #C23A4C, #C23A4C);
+  background-image: -moz-linear-gradient(top, #C23A4C, #C23A4C);
+  background-image: -ms-linear-gradient(top, #C23A4C, #C23A4C);
+  background-image: -o-linear-gradient(top, #C23A4C, #C23A4C);
+  background-image: linear-gradient(to bottom, #C23A4C, #C23A4C);
+  -webkit-border-radius: 4;
+  -moz-border-radius: 4;
+  border-radius: 4px;
+  font-family: Arial;
+  color: #fff;
+  font-size: 14px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  padding: 6px 8px;
+}
+
+.btn:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
 }
