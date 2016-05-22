@@ -1,14 +1,18 @@
 <template name='home'>
 	{{> signupLogin}}
 	{{#if currentUser}}
-		{{> gameList }}
-		{{> userList }}
-
+		<div class='game-list'>
+			{{> gameList }}
+		</div>
+		<div class='user-list'>
+			{{> userList }}
+		</div>
+		<div class='clearme'></div>
 	{{/if}}
 </template>
 
 <template name='gameList'>
-	<h1>Games</h1>
+	<h1>Current Games</h1>
 	<ul>
 		{{#each games}}
 			{{> gameItem}}
@@ -18,22 +22,19 @@
 
 <template name='gameItem'>
 	<li>
-		<a href='/game/{{_id}}'>Game with {{otherPlayer}}
-			<span>
-				{{#if inProgress}}
-					{{started}}
-				{{/if}}
-			</span>
-
-		</a>
+		<a class='game-opponent' href='/game/{{_id}}'>{{otherPlayer}}</a>
+		<span class='game-started-time'>
+			{{#if inProgress}}
+				{{started}}
+			{{/if}}
+		</span>
 	</li>
 </template>
 
 <template name='userList'>
 	<div class='column'>
-		<h1>Users</h1>
-		<p>Choose another user to start a game</p>
-		<ul>
+		<h1>Start a new game</h1>
+		<ul class='user-bank'>
 			{{#each users}}
 				{{> userItem}}
 			{{/each}}
@@ -42,5 +43,5 @@
 </template>
 
 <template name='userItem'>
-	<li><button>{{username}}</button></li>
+	<li class='user-item'><a>{{username}}</a></li>
 </template>

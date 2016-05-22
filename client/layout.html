@@ -1,7 +1,9 @@
 <template name='layout'>
 	{{> header}}
 	<div id='main'>
-		{{> yield}}
+		<div class='inner-body'>
+			{{> yield}}
+		</div>
 	</div>
 </template>
 
@@ -9,6 +11,12 @@
 	<div class='header'>
 		<div class='inner-header'>
 			<h1>Tile Mages</h1>
+			<span class='logged-in-user align-r'>
+				{{#if currentUser }}
+					{{> logout}}
+				{{/if}}
+			</span>
+			<div class='clearme'></div>
 		</div>
 	</div>
 </template>

@@ -21,7 +21,7 @@ Template.login.events({
 });
 
 Template.logout.events({
-	'click button': function(event, template){
+	'click .logout-btn': function(event, template){
 		event.preventDefault();
 		Meteor.logout();
 	}
