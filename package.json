@@ -6,6 +6,6 @@
   },
   "dependencies": {
     "meteor-node-stubs": "~0.2.0",
-    "boardgame": "https://github.com/alexolsen03/boardgame#testing"
+    "boardgame": "https://github.com/alexolsen03/boardgame"
   }
 }

@@ -131,21 +131,6 @@ Template.board.helpers({
 
 	opponent: function(){
 		return Template.instance().opponent;
-	},
-
-	gameOver: function(){
-		return Template.instance().gameOver.get() === undefined ? false : true
-	},
-
-	gameOverMsg: function(){
-		let status = Template.instance().gameOver.get();
-		if(status === 'draw'){
-			return "The game is a draw";
-		}else if(status === 'r'){
-			return "The game was won by red";
-		}else{
-			return "The game was won by white";
-		}
 	}
 });
 
