@@ -1,0 +1,17 @@
+<template name="chat">
+	<div class='chat'>
+		<ul>
+			{{#each m in messages}}
+				<li class='{{ getClass m.name }}'>
+					{{#unless isSystemMsg m.name}}
+						{{m.name}} <span class='nuetral'>></span>
+					{{/unless}}
+
+					{{ m.message }}
+				</li>
+			{{/each}}
+		</ul>
+		<input class='chat-input' type='text' id='message' />
+	</div>
+
+</template>
