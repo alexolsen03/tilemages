@@ -43,7 +43,7 @@ Template.board.onRendered(function(){
 			Meteor.call('endGame', gameId);
 		}
 
-		let tileMages = new TileMages.TileMages(gameFen, boardFen);
+		let tileMages = new TileMages(gameFen, boardFen);
 
 		let onDragStart = function(source, piece){
 			let game = Games.findOne(gameId);
@@ -94,15 +94,6 @@ Template.board.onRendered(function(){
 					tileMages.generateBoardFen()
 				);
 			}
-
-			// this will return undefined if not over
-/*			let gameOver = tileMages.gameOver();
-			if(gameOver){
-				console.log('game over!');
-				console.log('the result is a win for ' + gameOver);
-			}else{
-				console.log('not over!');
-			}*/
 		}
 
 		let cfg = {
@@ -116,7 +107,7 @@ Template.board.onRendered(function(){
 			onTurnEnd: onTurnEnd
 		}
 
-		load.load('abc','terracontrols',cfg);
+		load('abc','terracontrols',cfg);
 	});
 });
 
@@ -143,7 +134,6 @@ Template.board.helpers({
 	},
 
 	gameOver: function(){
-		console.log(Template.instance().gameOver.get());
 		return Template.instance().gameOver.get() === undefined ? false : true
 	},
 
