@@ -9,14 +9,23 @@ GameFactory.createGame = function(playerIds){
 	const DEFAULT_POSITION = 'SKMASSAMKS/10/10/10/10/10/10/10/10/skmassamks r 0';
 	const DEFAULT_TERRA_STATE = '10/10/10/10/10/10/10/10/10/10';
 
+	let date = new Date();
+	let messages = [];
+	let message = {
+		name: 'system',
+		message: 'Runnak game began ' + date.toString()
+	}
+	messages.push(message);
+
 	return {
 		players: players,
 		currentTurn: playerIds,
 		inProgress: true,
-		started: new Date(),
+		started: date,
 		fen: DEFAULT_POSITION,
 		boardFen: DEFAULT_TERRA_STATE,
-		isAActive: false
+		isAActive: false,
+		messages: messages
 	}
 }
 

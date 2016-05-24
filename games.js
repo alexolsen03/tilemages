@@ -1,4 +1,5 @@
 Games = new Meteor.Collection('games');
+Conversations = new Meteor.Collection('conversations');
 
 /*
 
@@ -34,11 +35,12 @@ if(Meteor.isServer) {
 	});
 
 	Meteor.publish('game', function(id){
-//		check(id);
-		console.log('publishing game!');
-		console.log(Games.find({ _id: id}));
 		return Games.find({ _id: id});
 	});
+
+/*	Meteor.publish('chat', function(id){
+
+	});*/
 }
 
 if(Meteor.isClient){
@@ -81,7 +83,36 @@ Meteor.methods({
 	},
 	endGame: function(gameId){
 		let game = Games.findOne(gameId);
+
+		if(game.inProgress === true){
+			let status = game.fen.split(' ')[3];
+			let msg = '';
+			if(status === 'draw'){
+				msg = "The game is a draw.";
+			}else if(status === 'r'){
+				msg = "The game was won by red.";
+			}else{
+				msg = "The game was won by white.";
+			}
+
+			game.messages.push({
+				name: 'system',
+				message: 'Game Over.  ' + msg
+			});
+		}
+
 		game.inProgress = false;
+
 		Games.update(gameId, game);
-	}
+	},
+	addMessage: function(msg, gameId){
+		Games.update(gameId, {
+			$push: {
+				messages: {
+					name: Meteor.user().username,
+					message: msg
+				}
+			}
+		});
+	},
 })

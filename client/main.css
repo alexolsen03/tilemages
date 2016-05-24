@@ -276,6 +276,47 @@ div.row, div.tile{
 	margin-left: 6px;
 }
 
+.board-side, .chat-side{
+	float: left;
+}
+
+.chat-side{
+	box-sizing: border-box;
+	margin-left: 20px;
+}
+
+.chat-side .chat ul{
+	height: 200px;
+	overflow: auto;
+}
+
+.chat-side .chat .system{
+	font-size: 8pt;
+	color: #666;
+}
+
+.chat-side .chat .me, .chat-side .chat .them{
+	padding: 2px 4px;
+	font-size: 10pt;
+	color: #333;
+}
+
+.chat-side .chat .me{
+	font-weight: bold;
+}
+
+.chat-side .chat .nuetral{
+	color: #999;
+	font-size: 6pt;
+	display: inline-block;
+	padding: 0px 2px;
+}
+
+.chat-side .chat .chat-input{
+	width: 100%;
+}
+
+
 .clearme{
 	clear: both;
 }
