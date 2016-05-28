@@ -63,7 +63,7 @@ Template.board.onRendered(function(){
 				return tileMages.move({from: source, to: target});	// return lost soldiers
 		}
 
-		let onTerraform = function(){
+		let onTerraform = function(type){
 			let game = Games.findOne(gameId);
 			let player = game.players[Meteor.userId()];
 			let team = player.team;
@@ -72,7 +72,7 @@ Template.board.onRendered(function(){
 			if(color !== tileMages.turn)
 			    	return;
 
-			return tileMages.generateTerraformOptions();
+			return tileMages.generateTerraformOptions(type);
 		}
 
 		let terraform = function(type, square){

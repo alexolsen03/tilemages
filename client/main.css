@@ -280,14 +280,30 @@ div.row, div.tile{
 	float: left;
 }
 
+.board-side{
+	width: 60%;
+}
+
 .chat-side{
 	box-sizing: border-box;
-	margin-left: 20px;
+	padding-left: 20px;
+	width: 40%;
+}
+
+.chat-side .chat{
+	width: 100%;
+	box-sizing: border-box;
+	border: 1px solid #aaa;
 }
 
 .chat-side .chat ul{
 	height: 200px;
+	padding: 6px;
 	overflow: auto;
+}
+
+.chat-side .chat ul li{
+	max-width: 288px;
 }
 
 .chat-side .chat .system{
@@ -313,6 +329,7 @@ div.row, div.tile{
 }
 
 .chat-side .chat .chat-input{
+	box-sizing: border-box;
 	width: 100%;
 }
 
