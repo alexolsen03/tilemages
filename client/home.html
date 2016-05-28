@@ -2,7 +2,12 @@
 	{{> signupLogin}}
 	{{#if currentUser}}
 		<div class='game-list'>
-			{{> gameList }}
+			<div>
+				{{> gameList }}
+			</div>
+			<div>
+				{{> completedGameList}}
+			</div>
 		</div>
 		<div class='user-list'>
 			{{> userList }}
@@ -13,21 +18,45 @@
 
 <template name='gameList'>
 	<h1>Current Games</h1>
-	<ul>
-		{{#each games}}
+	<ul class='games-bank'>
+		<div class='list-sub-title'>Your Turn</div>
+		{{#each yourTurnGames}}
 			{{> gameItem}}
+		{{/each}}
+		<br />
+		<br />
+		<div class='list-sub-title'>Their Turn</div>
+		{{#each theirTurnGames}}
+			{{> gameItem}}
+		{{/each}}
+	</ul>
+</template>
+
+<template name='completedGameList'>
+	<h1>Completed Games</h1>
+	<ul class='completed-game-list'>
+		{{#each completedGames}}
+			{{> completedGameItem}}
 		{{/each}}
 	</ul>
 </template>
 
 <template name='gameItem'>
 	<li>
-		<a class='game-opponent' href='/game/{{_id}}'>{{otherPlayer}}</a>
+		<a class='game-opponent truncate' href='/game/{{_id}}'>{{otherPlayer}}</a>
 		<span class='game-started-time'>
 			{{#if inProgress}}
 				{{started}}
 			{{/if}}
 		</span>
+	</li>
+</template>
+
+<template name='completedGameItem'>
+	<li>
+		<span class='game-opponent truncate'>{{otherPlayer}}</span>
+		<span class='game-started-time'>{{startedAt}}</span>
+		<span class='game-result {{ gameResultClass result}}'>{{result}}</span>
 	</li>
 </template>
 
@@ -43,5 +72,5 @@
 </template>
 
 <template name='userItem'>
-	<li class='user-item'><a>{{username}}</a></li>
+	<li class='user-item truncate'><a>{{username}}</a></li>
 </template>
