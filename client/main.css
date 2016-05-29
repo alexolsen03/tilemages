@@ -21,8 +21,12 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 
-body{
+html{
 	height: 100%;
+}
+
+body{
+	min-height: 100%;
 	background: #eee;
              background-image: -webkit-linear-gradient(#d7d7d7 0%, #eeeeee 116px);
              background-image: -o-linear-gradient(#d7d7d7 0%, #eeeeee 116px);
@@ -221,13 +225,28 @@ div.row, div.tile{
 	width: 70%;
 }
 
-.user-list{
-	width: 25%;
+.game-list > div{
+	height: 230px;
 }
 
-.game-list h1, .user-list h1{
+.game-list .list-sub-title{
 	text-transform: uppercase;
-	color: #333;
+	font-size: 10pt;
+	color: #777;
+}
+
+.game-list .list-sub-title{
+	padding: 4px 0px;
+}
+
+.user-list{
+	width: 30%;
+}
+
+.game-list h1,
+.user-list h1{
+	text-transform: uppercase;
+	color: #C23A4C;
 	font-family: 'Noto Sans','Lucida Grande','Lucida Sans Unicode',Geneva,Verdana,Sans-Serif;
 	padding: 4px 0px;
 }
@@ -237,13 +256,66 @@ div.row, div.tile{
 	font-weight: bold;
 	color: #333;
 	width: 150px;
+	text-decoration: none;
+}
+
+.completed-game-list,
+.games-bank,
+.user-bank{
+	padding-left: 8px;
+}
+
+.completed-game-list .game-opponent,
+.completed-game-list .game-started-time,
+.completed-game-list .game-result{
+	display: inline-block;
+	width: 75px;
+}
+
+.games-bank li,
+.games-bank span,
+.games-bank a,
+.completed-game-list li,
+.completed-game-list span{
+	height: 20px;
+	vertical-align: middle;
+	line-height: 1;
+}
+
+.game-result.game-win{
+	color: green;
+}
+
+.game-result.game-loss{
+	color: red;
+}
+
+.game-result, .game-started-time{
+	font-size: 10pt;
+}
+
+.game-started-time{
+	color: #888;
 }
 
 .user-list .user-item{
+	box-sizing: border-box;
+	border-radius: 3px;
 	font-weight: bold;
-	text-decoration: underline;
+	font-size: 10pt;
 	color: #333;
-	padding: 4px 0px;
+	padding: 4px 6px;
+	margin: 2px 0px;
+	border: 1px solid #333;
+	display: block;
+	width: 150px;
+}
+
+.user-list .user-item:hover{
+	cursor: pointer;
+	background-color: #333;
+	color: white;
+	border: 1px solid white;
 }
 
 .username{
@@ -368,4 +440,10 @@ div.row, div.tile{
   background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
   background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
   text-decoration: none;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

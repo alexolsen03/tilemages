@@ -6,7 +6,7 @@ GameFactory.createGame = function(playerIds){
 	playerIds[0].teamA = true;	// first player is red
 	playerIds[1].teamA = false;	// second player is white
 
-	const DEFAULT_POSITION = 'SKMASSAMKS/10/10/10/10/10/10/10/10/skmassamks r 0';
+	const DEFAULT_POSITION = 'M8m/1AK4ka1/1S6s1/10/10/10/10/1s6S1/1ak4KA1/m8M r 0';//'SKMASSAMKS/10/10/10/10/10/10/10/10/skmassamks r 0';
 	const DEFAULT_TERRA_STATE = '10/10/10/10/10/10/10/10/10/10';
 
 	let date = new Date();
